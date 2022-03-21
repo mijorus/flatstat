@@ -4,6 +4,9 @@ import Navbar from "../components/Navbar.vue";
 
 <template>
     <Navbar></Navbar>
-    <button class="button is-primary">Sign in</button>
-     <slot></slot>
+     <div class="container is-widescreen">
+         <div>
+             <slot></slot>
+         </div>
+     </div>
 </template>

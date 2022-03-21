@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "frappe-charts": "^1.6.2",
+    "ky": "^0.30.0",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
   },
