@@ -2,8 +2,14 @@ import ky from "ky";
 
 export const client = ky.create({'prefixUrl': 'https://flathub-stats-backend.vercel.app'})
 
-export interface LastMonthHistory {
+export interface LastMonthHistoryElement {
     name: string;
+    icon: string;
+    url: string;
+    history_sum: {
+        'u': number;
+        'i': number;
+    };
     history: {
         [key: string]: {
             [key: string]: {
@@ -16,6 +22,6 @@ export interface LastMonthHistory {
     };
 }
 
-export async function getLastMonth(): Promise<LastMonthHistory[]> {
+export async function getLastMonth(): Promise<LastMonthHistoryElement[]> {
     return await client.get('last_30_days.json').json()
 }

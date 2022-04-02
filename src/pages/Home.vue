@@ -3,7 +3,7 @@
         <div v-if="state.lastMonthData">
             <div class="columns is-multiline">
                 <div v-for="app in state.lastMonthData" class="column is-half">
-                    <h2>{{ app.name }}</h2>
+                    <PreviewBox :data="app"/>
                 </div>
             </div>
         </div>
@@ -14,10 +14,11 @@
 import Base from '../views/Base.vue'
 import { onMounted, reactive } from "vue";
 import type { UnwrapNestedRefs } from "vue";
-import { getLastMonth } from "../lib/statsData";
-import type { LastMonthHistory } from "../lib/statsData";
+import { getLastMonth } from "../lib/flathubData";
+import type { LastMonthHistoryElement } from "../lib/flathubData";
+import PreviewBox from '../components/PreviewBox.vue';
 
-const state: UnwrapNestedRefs<{ lastMonthData: LastMonthHistory[] | null }> = reactive({
+const state: UnwrapNestedRefs<{ lastMonthData: LastMonthHistoryElement[] | null }> = reactive({
     lastMonthData: null,
 })
 
