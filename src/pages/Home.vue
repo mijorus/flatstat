@@ -15,10 +15,10 @@ import Base from '../views/Base.vue'
 import { onMounted, reactive } from "vue";
 import type { UnwrapNestedRefs } from "vue";
 import { getLastMonth } from "../lib/flathubData";
-import type { LastMonthHistoryElement } from "../lib/flathubData";
+import type { HistoryElement } from "../lib/flathubData";
 import PreviewBox from '../components/PreviewBox.vue';
 
-const state: UnwrapNestedRefs<{ lastMonthData: LastMonthHistoryElement[] | null }> = reactive({
+const state: UnwrapNestedRefs<{ lastMonthData: HistoryElement[] | null }> = reactive({
     lastMonthData: null,
 })
 
@@ -27,3 +27,10 @@ onMounted(function() {
 })
 
 </script>
+
+<style global>
+    .graph-svg-tip .title{
+        color: white;
+        font-size: 20px;
+    }
+</style>

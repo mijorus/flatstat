@@ -1,9 +1,11 @@
 import Home from "./pages/Home.vue"
+import AppDetails from "./pages/AppDetails.vue"
 import * as VueRouter from "vue-router";
 
 const routes = [
     { path: '/', component: Home },
     { path: '/home', component: Home },
+    { path: '/app/:id', component: AppDetails },
 ]
 
 export default VueRouter.createRouter({

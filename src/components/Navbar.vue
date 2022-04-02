@@ -16,9 +16,9 @@
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item">
+                <router-link class="navbar-item" to="/">
                     <span>Flathub stats</span>
-                </a>
+                </router-link>
 
                 <div class="navbar-item">
                     <input id="search-bar" class="input is-rounded is-small" type="text" placeholder="Press / to search" />

@@ -2,14 +2,12 @@
     <div class="box">
         <article class="media">
             <div class="media-left">
-                <figure class="image is-64x64">
-                    <img :src="data.icon" alt="Image" />
-                </figure>
+                <LazyImage :src="data.icon" size="is-64x64" />
             </div>
             <div class="media-content">
                 <div class="content">
                     <p>
-                        <strong>{{ data.name }}</strong>
+                        <router-link :to="`/app/${encodeURIComponent(data.name)}`"><strong>{{ data.appstream.name }}</strong></router-link>
                         <div>
                             <a :href="data.url" class="is-size-7">Open on Flathub</a>
                         </div>
@@ -26,11 +24,13 @@
     </div>
 </template>
 
-<script setup lang="ts">import { computed } from 'vue';
-import { LastMonthHistoryElement } from '../lib/flathubData';
+<script setup lang="ts">
+import { computed } from 'vue';
+import { HistoryElement } from '../lib/flathubData';
+import LazyImage from './LazyImage.vue';
 
 const props = defineProps<{
-    data: LastMonthHistoryElement;
+    data: HistoryElement;
 }>()
 
 </script>
