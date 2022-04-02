@@ -8,9 +8,7 @@
                 <div class="content">
                     <p>
                         <router-link :to="`/app/${encodeURIComponent(data.name)}`"><strong>{{ data.appstream.name }}</strong></router-link>
-                        <div>
-                            <a :href="data.url" class="is-size-7">Open on Flathub</a>
-                        </div>
+                        <p class="is-size-7">{{data.name}}</p>
                     </p>
                     <div class="is-size-5 has-text-grey	">
                         Downloads {{ data.history_sum.i }}

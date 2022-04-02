@@ -2,11 +2,14 @@
     <Base>
        <div class="m-1">
            <div v-if="state.name" class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center">
-               <h1 class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center">
+               <h1 class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center ">
                     <LazyImage :src="state.appDetails?.icon" size="is-inline-block is-64x64 mr-2"></LazyImage>
                     {{state.name}}
                 </h1>
-                <p class="subtitle  is-size-6">{{state.appDetails?.appstream?.developer_name || `${state.name} developers`}}</p>
+                <p class="subtitle is-size-6">
+                    by {{state.appDetails?.appstream?.developer_name || `${state.name} developers`}} <br>
+                    <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
+                </p>
            </div>
            <h1 class="title" v-else> Loading details... </h1>
            <div class="chart"></div>

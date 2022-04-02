@@ -21,7 +21,27 @@
                 </router-link>
 
                 <div class="navbar-item">
-                    <input id="search-bar" class="input is-rounded is-small" type="text" placeholder="Press / to search" />
+                    <div class="dropdown" :class="{'is-active': state.searchResults}">
+                        <input
+                            id="search-bar"
+                            class="input is-rounded is-small"
+                            type="text"
+                            placeholder="Press / to search"
+                            v-model="state.query"
+                            @keyup="handleSearchQueryChange"
+                        />
+
+                        <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content" v-if="state.searchResults">
+                                <div class="dropdown-item" v-for="result in state.searchResults">
+                                    <p style="text-align: left;">
+                                        <router-link :to="`/app/${result.app_id}`">{{result.app_id}}</router-link>
+                                    </p>
+                                </div>
+                                <hr class="dropdown-divider" />
+                            </div>
+                        </div>
+                    </div>
                     <a class="navbar-link">More</a>
                 </div>
             </div>
@@ -30,11 +50,26 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { onMounted, reactive, UnwrapNestedRefs } from 'vue'
+import { searchApp } from '../lib/flathubData';
+import { SearchData } from '../types/flathub';
+
+const state: UnwrapNestedRefs<{ query: string, searchResults?: SearchData[] }> = reactive({
+    query: '',
+    searchResults: undefined
+})
+
+async function handleSearchQueryChange(e) {
+    if (state.query.length) {
+        state.searchResults = (await searchApp(state.query)).slice(0, 20)
+    } else {
+        state.searchResults = undefined
+    }
+}
 
 function handleDocumentKeydown(e: KeyboardEvent) {
     if (document.getElementById('search-bar') &&
-        document.activeElement === document.querySelector('body') && 
+        document.activeElement === document.querySelector('body') &&
         e.key === '/'
     ) {
         e.preventDefault()
@@ -45,7 +80,7 @@ function handleDocumentKeydown(e: KeyboardEvent) {
 onMounted(() => {
     document.addEventListener('keydown', handleDocumentKeydown)
 
-     // Get all "navbar-burger" elements
+    // Get all "navbar-burger" elements
     const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
     // Check if there are any navbar burgers

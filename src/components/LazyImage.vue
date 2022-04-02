@@ -274,7 +274,6 @@ const image: Ref<HTMLImageElement | null> = ref(null)
 
 onMounted(() => {
     image.value?.addEventListener('load', () => {
-        console.log('loaded')
         state.loaded = true
     })
 })

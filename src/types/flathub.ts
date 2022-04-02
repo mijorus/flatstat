@@ -1,3 +1,8 @@
+export interface SearchData {
+    query: string;
+    app_id: string;
+}
+
 export interface FlatHubAppstreamResponse {
     description: string;
     screenshots: Screenshot[];
