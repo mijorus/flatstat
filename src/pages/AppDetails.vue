@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import Base from '../views/Base.vue'
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
 import { getAppDetails, getAppstramDetails } from "../lib/flathubData";
@@ -39,6 +39,8 @@ import { FlatHubAppstreamResponse } from "../types/flathub";
 import { Chart } from "frappe-charts/dist/frappe-charts.min.esm"
 import LazyImage from '../components/LazyImage.vue';
 
+interface GraphData { labels: string[], datasets: { name: string; values: number[]; type: string}[], yMarkers?: any[] }
+
 const router = useRouter()
 const route = useRoute()
 
@@ -48,17 +50,22 @@ const state: UnwrapNestedRefs<{ appDetails?: AppDetailElement, id?: string, name
     name: undefined,
 })
 
-let graphData: { labels: string[], datasets: { name: string; values: number[]; type: string}[], yMarkers?: any[] } = {
-    labels: [],
-    datasets: [
-        { name: 'Installs', values: [], type: 'bar' }
-    ]
-};
+let graphData: GraphData  = resetGraphData();
+
+function resetGraphData() {
+    return {
+        labels: [],
+        datasets: [
+            { name: 'Installs', values: [], type: 'bar' }
+        ]
+    }
+}
 
 function loadGraphData(data: AppDetailElement) {
-    for (let [key, value] of Object.entries(data.history)) {
-        graphData.labels.push(key)
-        graphData.datasets[0].values.push(value.total.i)
+    graphData = resetGraphData()
+    for (let h of data.history) {
+        graphData.labels.push(h.date)
+        graphData.datasets[0].values.push(h?.total?.i || 0)
     }
 
     const mean = graphData.datasets[0].values.reduce((prev, curr) => prev + curr, 0) / graphData.datasets[0].values.length;
@@ -82,8 +89,17 @@ function loadGraphData(data: AppDetailElement) {
             
         },
         axisOptions: {
-            xIsSeries: true // default: false
+            xIsSeries: true, // default: false
+            xAxisMode: 'tick',
         },
+    })
+}
+
+function loadAppData(id: string) {
+    getAppDetails(id).then((res) => {
+        loadGraphData(res)
+        state.appDetails = { ...res }
+        state.name = res.appstream.name
     })
 }
 
@@ -92,11 +108,11 @@ onMounted(function() {
     const id: string = route.params.id;
     state.id = id;
 
-    getAppDetails(id).then((res) => {
-        loadGraphData(res)
-        state.appDetails = { ...res }
-        state.name = res.appstream.name
-    })
+   loadAppData(id)
+})
+
+watch(() => route.params.id, (newId) => {
+    loadAppData(newId)
 })
 
 </script>

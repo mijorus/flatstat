@@ -1,6 +1,7 @@
 export interface SearchData {
     query: string;
     app_id: string;
+    name: string;
 }
 
 export interface FlatHubAppstreamResponse {

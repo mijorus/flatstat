@@ -14,14 +14,11 @@ export interface HistoryElement {
         'i': number;
     };
     history: {
-        [key: string]: {
-            [key: string]: {
-                total: { i: number, u: number }
-                arches: {
-                    [key: string]: { i: number, u: number }
-                }
-            };
-        };
+        date: string
+        total: { i: number, u: number }
+        arches: {
+            [key: string]: { i: number, u: number }
+        }
     };
 }
 
@@ -38,13 +35,12 @@ export interface AppDetailElement extends AppData {
         'i': number;
     };
     history: {
-        [key: string]: {
-            total: { i: number, u: number }
-            arches: {
-                [key: string]: { i: number, u: number }
-            }
-        };
-    };
+        date: string;
+        total: { i: number, u: number }
+        arches: {
+            [key: string]: { i: number, u: number }
+        }
+    }[];
 }
 
 export function getLastMonth(): Promise<HistoryElement[]> {
@@ -52,11 +48,11 @@ export function getLastMonth(): Promise<HistoryElement[]> {
 }
 
 export function getAppDetails(appId: string): Promise<AppDetailElement> {
-    return client.get(`app_history/${appId.replaceAll('/', '_')}.json`).json()
+    return client.get(`app_history/${encodeURIComponent(appId)}.json`).json()
 }
 
 export function getAppData(appId: string): Promise<AppData> {
-    return client.get(`app_data/${appId.replaceAll('/', '_')}.json`).json()
+    return client.get(`app_data/${encodeURIComponent(appId)}.json`).json()
 }
 
 let searchData: SearchData[] | undefined = undefined;
@@ -69,7 +65,7 @@ export async function searchApp(query: string): Promise<SearchData[]>{
 
     //@ts-ignore
     for (const data of searchData) {
-        const found = data.query.includes(query);
+        const found = data.query.toLowerCase().includes(query.toLowerCase());
         if (found && !results[data.app_id]) {
             results[data.app_id] = data
         }
@@ -78,3 +74,6 @@ export async function searchApp(query: string): Promise<SearchData[]>{
     return Object.values(results);
 }
 
+export function getAppIconUrl(appId: string) {
+    return `https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/${encodeURIComponent(appId)}.png`
+}

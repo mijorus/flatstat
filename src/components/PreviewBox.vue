@@ -10,10 +10,11 @@
                         <router-link :to="`/app/${encodeURIComponent(data.name)}`"><strong>{{ data.appstream.name }}</strong></router-link>
                         <p class="is-size-7">{{data.name}}</p>
                     </p>
-                    <div class="is-size-5 has-text-grey	">
+                    <div class="is-size-6">In the last 30 days:</div>
+                    <div class="is-size-7 has-text-grey	">
                         Downloads {{ data.history_sum.i }}
                     </div>
-                    <div class="is-size-6 has-text-grey	">
+                    <div class="is-size-7 has-text-grey	">
                         Updates {{ data.history_sum.u }}
                     </div>
                 </div>

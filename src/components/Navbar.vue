@@ -35,7 +35,10 @@
                             <div class="dropdown-content" v-if="state.searchResults">
                                 <div class="dropdown-item" v-for="result in state.searchResults">
                                     <p style="text-align: left;">
-                                        <router-link :to="`/app/${result.app_id}`">{{result.app_id}}</router-link>
+                                        <router-link :to="`/app/${result.app_id}`" class="is-flex is-align-items-center">
+                                            <LazyImage :src="getAppIconUrl(result.app_id)" size="is-32x32 mr-2" />
+                                            {{result.name}}
+                                        </router-link>
                                     </p>
                                 </div>
                                 <hr class="dropdown-divider" />
@@ -50,18 +53,24 @@
 </template>
 
 <script lang="ts" setup>
+import { NumericLiteral } from '@babel/types';
 import { onMounted, reactive, UnwrapNestedRefs } from 'vue'
-import { searchApp } from '../lib/flathubData';
+import { searchApp, getAppIconUrl } from '../lib/flathubData';
 import { SearchData } from '../types/flathub';
+import LazyImage from './LazyImage.vue';
 
 const state: UnwrapNestedRefs<{ query: string, searchResults?: SearchData[] }> = reactive({
     query: '',
     searchResults: undefined
 })
 
+let searchResultsTimeout: number;
 async function handleSearchQueryChange(e) {
-    if (state.query.length) {
-        state.searchResults = (await searchApp(state.query)).slice(0, 20)
+    if (state.query.length > 3) {
+        clearTimeout(searchResultsTimeout);
+        setTimeout(async () => {
+            state.searchResults = (await searchApp(state.query)).slice(0, 20)
+        }, 300)
     } else {
         state.searchResults = undefined
     }

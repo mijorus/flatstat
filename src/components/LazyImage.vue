@@ -1,6 +1,6 @@
 <template>
     <figure class="image" :class="size">
-        <img :src="props.src" alt="Image" ref="image" v-show="state.loaded" :class="{loaded: state.loaded}"/>
+        <img style="object-fit: contain;" :src="props.src" alt="Image" ref="image" v-show="state.loaded" :class="{loaded: state.loaded}"/>
         <svg
             v-if="!state.loaded"
             class="logo"

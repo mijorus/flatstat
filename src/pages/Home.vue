@@ -31,6 +31,7 @@ onMounted(function() {
 <style global>
     .graph-svg-tip .title{
         color: white;
-        font-size: 20px;
+        font-size: 14px;
+        white-space: nowrap;
     }
 </style>
