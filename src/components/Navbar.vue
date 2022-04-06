@@ -32,16 +32,16 @@
                         />
 
                         <div class="dropdown-menu" role="menu">
-                            <div class="dropdown-content" v-if="state.searchResults">
-                                <div class="dropdown-item" v-for="result in state.searchResults">
+                            <div class="dropdown-content" v-if="state.searchResults" style="max-height: 400px; overflow-y: auto;">
+                                <div class="dropdown-item" v-for="result, i in state.searchResults">
                                     <p style="text-align: left;">
                                         <router-link :to="`/app/${result.app_id}`" class="is-flex is-align-items-center">
                                             <LazyImage :src="getAppIconUrl(result.app_id)" size="is-32x32 mr-2" />
                                             {{result.name}}
                                         </router-link>
                                     </p>
+                                <hr class="dropdown-divider" v-if="i !== (state.searchResults.length - 1)"/>
                                 </div>
-                                <hr class="dropdown-divider" />
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@ const state: UnwrapNestedRefs<{ query: string, searchResults?: SearchData[] }> =
 
 let searchResultsTimeout: number;
 async function handleSearchQueryChange(e) {
-    if (state.query.length > 3) {
+    if (state.query.length > 2) {
         clearTimeout(searchResultsTimeout);
         setTimeout(async () => {
             state.searchResults = (await searchApp(state.query)).slice(0, 20)
