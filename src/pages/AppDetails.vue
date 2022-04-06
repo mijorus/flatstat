@@ -17,13 +17,18 @@
                     <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
                 </p>
             </div>
-            <h1 class="title" v-else>Loading details...</h1>
+            <h1 class="title" v-else>
+                Loading details...
+                <div class="mt-6">
+                    <LazyImage src="" size="is-inline-block is-64x64 mr-2"></LazyImage>
+                </div>
+            </h1>
             <div class="chart"></div>
         </div>
 
         <div v-if="state.appDetails">
-            <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i }}</p>
-            <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u }} times</p>
+            <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
+            <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
 
             <h2 class="is-size-4 mt-6">Lastest updates</h2>
             <div>
@@ -31,7 +36,7 @@
                     class="columns is-centered has-text-left"
                     v-for="release of state.appDetails.appstream.releases.slice(0, 7)"
                 >
-                    <div class="column is-one-third mt-2">
+                    <div class="column is-one-third mt-2" style="border-left: 1px solid lightgrey;">
                         <p>
                             Version: {{ release.version }}
                             <span
@@ -45,7 +50,7 @@
                         </p>
                         <p
                             class="is-size-7 has-text-grey"
-                        >{{ dayjs(parseInt(release.timestamp) * 1000).format('DD/MM/YYYY') }}</p>
+                        >{{ dayjs(parseInt(release.timestamp) * 1000).format(defaultDateFormat) }}</p>
                     </div>
                 </div>
             </div>
@@ -60,6 +65,7 @@ import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
 import { getAppDetails, getAppstramDetails } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
+import { primaryColor, defaultDateFormat } from "../lib/utils";
 import dayjs from "dayjs";
 
 //@ts-ignore
@@ -86,18 +92,10 @@ function resetGraphData() {
     return {
         labels: [],
         datasets: [
-            { name: 'Installs', values: [], type: 'bar' }
+            { name: 'Installs', values: [], type: 'bar' },
         ]
     }
 }
-
-// async function loadUpdatesHistory() {
-//     if (!state.appDetails || !(state.appDetails.appstream.releases ?? false)) return []
-
-//     for (let release of state.appDetails.appstream.releases) {
-
-//     }
-// }
 
 function loadGraphData(data: AppDetailElement) {
     graphData = resetGraphData()
@@ -106,10 +104,9 @@ function loadGraphData(data: AppDetailElement) {
     for (let h of data.history) {
         const value = h?.total?.i || 0
 
-        if (last > 0) {
+        if (last > 0 && (h.date !== dayjs().format(defaultDateFormat))) {
             graphData.labels.push(h.date)
             graphData.datasets[0].values.push(value)
-
         }
 
         last = (last > 0) ? 1 : value
@@ -131,7 +128,7 @@ function loadGraphData(data: AppDetailElement) {
         data: graphData,
         type: 'axis-mixed',
         height: 500,
-        colors: ['#7cd6fd', '#743ee2'],
+        colors: [ primaryColor ],
         axisOptions: {
             xIsSeries: true, // default: false
             xAxisMode: 'tick',
