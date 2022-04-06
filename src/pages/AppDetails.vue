@@ -63,9 +63,17 @@ function resetGraphData() {
 
 function loadGraphData(data: AppDetailElement) {
     graphData = resetGraphData()
+
+    let last = -1
     for (let h of data.history) {
-        graphData.labels.push(h.date)
-        graphData.datasets[0].values.push(h?.total?.i || 0)
+        const value = h?.total?.i || 0
+
+        if (last > 0) {
+            graphData.labels.push(h.date)
+            graphData.datasets[0].values.push(value)
+        }
+
+        last = (last > 0) ? 1 : value
     }
 
     const mean = graphData.datasets[0].values.reduce((prev, curr) => prev + curr, 0) / graphData.datasets[0].values.length;
@@ -91,6 +99,11 @@ function loadGraphData(data: AppDetailElement) {
         axisOptions: {
             xIsSeries: true, // default: false
             xAxisMode: 'tick',
+        },
+        lineOptions: {
+            hideDots: true,
+            spline: 1, // default: 0
+
         },
     })
 }
