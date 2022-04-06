@@ -7,7 +7,9 @@
             <div class="media-content">
                 <div class="content">
                     <p>
-                        <router-link :to="`/app/${encodeURIComponent(data.name)}`"><strong>{{ data.appstream.name }}</strong></router-link>
+                        <router-link :to="`/app/${encodeURIComponent(data.name)}`">
+                            <strong>{{ data.appstream.name && data.appstream.name.length ? data.appstream.name : data.name }}</strong>
+                        </router-link>
                         <p class="is-size-7">{{data.name}}</p>
                     </p>
                     <div class="is-size-6">In the last 30 days:</div>
