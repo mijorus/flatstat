@@ -1,56 +1,86 @@
 <template>
     <Base>
-       <div class="m-1">
-           <div v-if="state.name" class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center">
-               <h1 class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center ">
+        <div class="m-1">
+            <div
+                v-if="state.name"
+                class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
+            >
+                <h1
+                    class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center"
+                >
                     <LazyImage :src="state.appDetails?.icon" size="is-inline-block is-64x64 mr-2"></LazyImage>
-                    {{state.name}}
+                    {{ state.name }}
                 </h1>
                 <p class="subtitle is-size-6">
-                    by {{state.appDetails?.appstream?.developer_name || `${state.name} developers`}} <br>
+                    by {{ state.appDetails?.appstream?.developer_name || `${state.name} developers` }}
+                    <br />
                     <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
                 </p>
-           </div>
-           <h1 class="title" v-else> Loading details... </h1>
-           <div class="chart"></div>
-       </div>
+            </div>
+            <h1 class="title" v-else>Loading details...</h1>
+            <div class="chart"></div>
+        </div>
 
-       <div v-if="state.appDetails">
-            <p class="is-size-3">
-                Total downloads: {{ state.appDetails.history_sum.i }}
-            </p>
-            <p class="is-size-6 has-text-grey">
-                Updated: {{ state.appDetails.history_sum.u }} times
-            </p>
-       </div>
+        <div v-if="state.appDetails">
+            <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i }}</p>
+            <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u }} times</p>
+
+            <h2 class="is-size-4 mt-6">Lastest updates</h2>
+            <div>
+                <div
+                    class="columns is-centered has-text-left"
+                    v-for="release of state.appDetails.appstream.releases.slice(0, 7)"
+                >
+                    <div class="column is-one-third mt-2">
+                        <p>
+                            Version: {{ release.version }}
+                            <span
+                                v-if="release.type === 'stable'"
+                                class="tag is-success is-light is-normal"
+                            >stable</span>
+                            <span
+                                v-else-if="release.type !== undefined"
+                                class="tag is-warning is-light is-normal"
+                            >{{ release.type }}</span>
+                        </p>
+                        <p
+                            class="is-size-7 has-text-grey"
+                        >{{ dayjs(parseInt(release.timestamp) * 1000).format('DD/MM/YYYY') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </Base>
 </template>
 
 <script setup lang="ts">
 import Base from '../views/Base.vue'
-import { onMounted, reactive, watch } from "vue";
+import { ref, onMounted, reactive, watch, Ref } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
 import { getAppDetails, getAppstramDetails } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
-import { FlatHubAppstreamResponse } from "../types/flathub";
+import dayjs from "dayjs";
 
 //@ts-ignore
 import { Chart } from "frappe-charts/dist/frappe-charts.min.esm"
 import LazyImage from '../components/LazyImage.vue';
 
-interface GraphData { labels: string[], datasets: { name: string; values: number[]; type: string}[], yMarkers?: any[] }
+interface GraphData { labels: string[], datasets: { name: string; values: number[]; type: string }[], yMarkers?: any[] }
+interface ChartMarker { label: string; value: number; options: Object }
 
 const router = useRouter()
 const route = useRoute()
 
-const state: UnwrapNestedRefs<{ appDetails?: AppDetailElement, id?: string, name?: string }> = reactive({
-    appDetails: undefined,
-    id: undefined,
-    name: undefined,
-})
+let sourceImageAnalysis: Ref<HTMLImageElement | null> = ref(null)
 
-let graphData: GraphData  = resetGraphData();
+const state: UnwrapNestedRefs<{
+    appDetails?: AppDetailElement,
+    id?: string,
+    name?: string,
+}> = reactive({})
+
+let graphData: GraphData = resetGraphData();
 
 function resetGraphData() {
     return {
@@ -60,6 +90,14 @@ function resetGraphData() {
         ]
     }
 }
+
+// async function loadUpdatesHistory() {
+//     if (!state.appDetails || !(state.appDetails.appstream.releases ?? false)) return []
+
+//     for (let release of state.appDetails.appstream.releases) {
+
+//     }
+// }
 
 function loadGraphData(data: AppDetailElement) {
     graphData = resetGraphData()
@@ -71,41 +109,42 @@ function loadGraphData(data: AppDetailElement) {
         if (last > 0) {
             graphData.labels.push(h.date)
             graphData.datasets[0].values.push(value)
+
         }
 
         last = (last > 0) ? 1 : value
     }
 
     const mean = graphData.datasets[0].values.reduce((prev, curr) => prev + curr, 0) / graphData.datasets[0].values.length;
-    graphData.yMarkers = [
+    const yMarkers: ChartMarker[] = [
         {
-            label: "Mean: " + mean.toFixed(0),
+            label: "Mean: " + mean.toFixed(0) + ' (daily downloads)',
             value: mean,
             options: { labelPos: 'left' } // default: 'right'
         }
     ]
 
+    graphData = { ...graphData, yMarkers }
+
     const chart = new Chart(".chart", {
         title: "",
         data: graphData,
         type: 'axis-mixed',
-        height: 500 ,
+        height: 500,
         colors: ['#7cd6fd', '#743ee2'],
-        tooltipOptions: {
-            formatTooltipX: d => d,
-            formatTooltipY: d => d
-            
-        },
         axisOptions: {
             xIsSeries: true, // default: false
             xAxisMode: 'tick',
         },
         lineOptions: {
             hideDots: true,
-            spline: 1, // default: 0
-
+            spline: 1, // default: 
         },
     })
+
+    chart.parent.addEventListener('data-select', (e) => {
+        console.log(e);
+    }); 
 }
 
 function loadAppData(id: string) {
@@ -114,17 +153,19 @@ function loadAppData(id: string) {
         state.appDetails = { ...res }
         state.name = res.appstream.name
     })
+
 }
 
-onMounted(function() {
+onMounted(function () {
     //@ts-ignore
     const id: string = route.params.id;
     state.id = id;
 
-   loadAppData(id)
+    loadAppData(id)
 })
 
-watch(() => route.params.id, (newId) => {
+//@ts-ignore
+watch(() => route.params.id, (newId: string) => {
     loadAppData(newId)
 })
 
