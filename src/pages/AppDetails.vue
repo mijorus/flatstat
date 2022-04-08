@@ -66,7 +66,7 @@ import Base from '../views/Base.vue'
 import { ref, onMounted, reactive, watch, Ref } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
-import { getAppDetails, getAppstramDetails } from "../lib/flathubData";
+import { getAppDetails } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
 import { primaryColor, defaultDateFormat } from "../lib/utils";
 import dayjs from "dayjs";

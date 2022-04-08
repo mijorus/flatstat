@@ -70,7 +70,7 @@ const state: UnwrapNestedRefs<{ query: string, searchResults?: SearchData[] }> =
 })
 
 let searchResultsTimeout: number;
-async function handleSearchQueryChange(e) {
+async function handleSearchQueryChange(e: KeyboardEvent) {
     if (state.query.length > 2) {
         clearTimeout(searchResultsTimeout);
         setTimeout(async () => {
@@ -110,7 +110,7 @@ onMounted(() => {
 
                 // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
                 el.classList.toggle('is-active');
-                t.classList.toggle('is-active');
+                if (t) t.classList.toggle('is-active');
 
             });
         });
