@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-fixed-top px-2" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top px-2 is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a
                 role="button"
@@ -17,7 +17,7 @@
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
                 <router-link class="navbar-item" to="/">
-                    <span>Flathub stats</span>
+                    <span>Flatstat</span>
                 </router-link>
 
                 <div class="navbar-item">
@@ -32,7 +32,7 @@
                         />
 
                         <div class="dropdown-menu" role="menu">
-                            <div class="dropdown-content" v-if="state.searchResults" style="max-height: 400px; overflow-y: auto;">
+                            <div class="dropdown-content" v-if="state.searchResults && state.searchResults.length" style="max-height: 400px; overflow-y: auto;">
                                 <div class="dropdown-item" v-for="result, i in state.searchResults">
                                     <p style="text-align: left;">
                                         <router-link :to="`/app/${result.app_id}`" class="is-flex is-align-items-center">
@@ -40,12 +40,17 @@
                                             {{result.name}}
                                         </router-link>
                                     </p>
-                                <hr class="dropdown-divider" v-if="i !== (state.searchResults.length - 1)"/>
+                                    <hr class="dropdown-divider" v-if="i !== (state.searchResults.length - 1)"/>
+                                </div>
+                            </div>
+                            <div class="dropdown-content" v-else-if="state.searchResults?.length === 0">
+                                <div class="dropdown-item">
+                                    <p class="has-text-grey">Nothing interesting was found 😔</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <a class="navbar-link">More</a>
+                    <!-- <a class="navbar-link">More</a> -->
                 </div>
             </div>
         </div>
