@@ -23,7 +23,10 @@
                     <LazyImage src="" size="is-inline-block is-64x64 mr-2"></LazyImage>
                 </div>
             </h1>
-            <div class="chart"></div>
+            <div class="columns">
+                <div id="chart" class=" column"></div>
+                <div id="chart-comulative" class=" column"></div>
+            </div>
         </div>
 
         <div v-if="state.appDetails">
@@ -86,27 +89,42 @@ const state: UnwrapNestedRefs<{
     name?: string,
 }> = reactive({})
 
-let graphData: GraphData = resetGraphData();
-
 function resetGraphData() {
     return {
         labels: [],
         datasets: [
-            { name: 'Installs', values: [], type: 'bar' },
+            { name: 'Daily new installations', values: [], type: 'bar' },
         ]
     }
 }
 
-function loadGraphData(data: AppDetailElement) {
-    graphData = resetGraphData()
+function resetComulativeGraphData() {
+    return {
+        labels: [],
+        datasets: [
+            { name: 'Total new installations', values: [], type: 'bar' },
+        ]
+    }
+}
 
-    let last = -1
+let graphData: GraphData = resetGraphData()
+let comulativeGraphData: GraphData = resetComulativeGraphData()
+
+function loadGraphData(data: AppDetailElement) {
+    graphData = resetGraphData();
+    comulativeGraphData = resetComulativeGraphData();
+
+    let last = -1 // will be set > on the first day with at least one download
     for (let h of data.history) {
         const value = h?.total?.i || 0
 
         if (last > 0 && (h.date !== dayjs().format(defaultDateFormat))) {
             graphData.labels.push(h.date)
             graphData.datasets[0].values.push(value)
+
+            const nextComulativeValue = value + (comulativeGraphData.datasets[0].values.at(-1) ?? 0)
+            comulativeGraphData.labels.push(h.date)
+            comulativeGraphData.datasets[0].values.push(nextComulativeValue)
         }
 
         last = (last > 0) ? 1 : value
@@ -122,10 +140,8 @@ function loadGraphData(data: AppDetailElement) {
     ]
 
     graphData = { ...graphData, yMarkers }
-
-    const chart = new Chart(".chart", {
+    const commonGraphData =  {
         title: "",
-        data: graphData,
         type: 'axis-mixed',
         height: 500,
         colors: [ primaryColor ],
@@ -137,11 +153,10 @@ function loadGraphData(data: AppDetailElement) {
             hideDots: true,
             spline: 1, // default: 
         },
-    })
+    }
 
-    chart.parent.addEventListener('data-select', (e) => {
-        console.log(e);
-    }); 
+    const chart = new Chart("#chart", { ...commonGraphData, data: graphData })
+    const chartComulative = new Chart("#chart-comulative", { ...commonGraphData, data: comulativeGraphData, colors: ['#ff5200'] })
 }
 
 function loadAppData(id: string) {
