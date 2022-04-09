@@ -1,7 +1,7 @@
 export const primaryColor = '#4a86cf';
 export const defaultDateFormat = 'YYYY/MM/DD';
 
-export function copyToClipboard(text: str, successIcon?: string) {
+export function copyToClipboard(text: string, successIcon?: string) {
     navigator.clipboard.writeText(text)
 
     if (successIcon) {

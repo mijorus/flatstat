@@ -1,35 +1,59 @@
 <template>
     <Base>
         <div class="m-1">
-            <div
-                v-if="state.name"
-                class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
-            >
-                <h1
-                    class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center"
-                >
-                    <LazyImage :src="state.appDetails?.icon" size="is-inline-block is-64x64 mr-2"></LazyImage>
-                    {{ state.name }}
-                </h1>
-                <p class="subtitle is-size-6">
-                    by {{ state.appDetails?.appstream?.developer_name || `${state.name} developers` }}
-                    <br />
-                    <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
-                </p>
-            </div>
-            <h1 class="title" v-else>
-                Loading details...
-                <div class="mt-6">
-                    <LazyImage src="" size="is-inline-block is-64x64 mr-2"></LazyImage>
+            <Promised :promise="appDataPromise">
+                <template v-slot:pending>
+                    <h1 class="title" >
+                        Loading details...
+                        <div class="mt-6">
+                            <LazyImage src="" size="is-inline-block is-64x64 mr-2"></LazyImage>
+                        </div>
+                    </h1>
+                </template>
+                <template v-slot>
+                    <div
+                    
+                        class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
+                    >
+                        <h1
+                            class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center"
+                        >
+                            <LazyImage :src="state.appDetails?.icon" size="is-inline-block is-64x64 mr-2"></LazyImage>
+                            {{ state.name }}
+                        </h1>
+                        <p class="subtitle is-size-6">
+                            by {{ state.appDetails?.appstream?.developer_name || `${state.name} developers` }}
+                            <br />
+                            <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
+                        </p>
+                    </div>
+                </template>
+                <template v-slot:rejected="err">
+                    <h1 class="title has-text-danger mt-4" >
+                        Requested app not found
+                    </h1>
+                    <div class="is-2 has-text-danger title">
+                        <i class="gg-danger" style="display: inline-block;"></i>
+                    </div>
+                </template>
+            </Promised>
+            <div v-show="state.appDetails">
+                <div class="columns" >
+                    <div id="chart" class=" column"></div>
+                    <div id="chart-comulative" class=" column"></div>
                 </div>
-            </h1>
-            <div class="columns">
-                <div id="chart" class=" column"></div>
-                <div id="chart-comulative" class=" column"></div>
+
+                <h3 class="is-size-4">Updates heatmap</h3>
+                <div class="columns">
+                    <div class="column" style="overflow-x: auto;">
+                        <div id="updates-heatmap"> </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div v-if="state.appDetails">
+        <div v-if="state.appDetails" class="mt-6">
+
             <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
             <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
 
@@ -88,13 +112,15 @@
 
 <script setup lang="ts">
 import Base from '../views/Base.vue'
-import { ref, onMounted, reactive, watch, Ref } from "vue";
+import { ref, onMounted, reactive, watch, Ref, VueElement } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
 import { getAppDetails, getShieldIoBadgeDataUrl } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
 import { primaryColor, defaultDateFormat } from "../lib/utils";
+import { Promised, usePromise } from "vue-promised";
 import { copyToClipboard } from "./../lib/utils";
+
 import dayjs from "dayjs";
 
 //@ts-ignore
@@ -106,8 +132,6 @@ interface ChartMarker { label: string; value: number; options: Object }
 
 const router = useRouter()
 const route = useRoute()
-
-let sourceImageAnalysis: Ref<HTMLImageElement | null> = ref(null)
 
 const state: UnwrapNestedRefs<{
     appDetails?: AppDetailElement,
@@ -140,13 +164,19 @@ function loadGraphData(data: AppDetailElement) {
     graphData = resetGraphData();
     comulativeGraphData = resetComulativeGraphData();
 
+    const updatedHeatmapDataPoint: {[key: string]: any} = {}
+
     let last = -1 // will be set > on the first day with at least one download
+    let firstUsableDate: string | undefined = undefined;
     for (let h of data.history) {
         const value = h?.total?.i || 0
 
         if (last > 0 && (h.date !== dayjs().format(defaultDateFormat))) {
             graphData.labels.push(h.date)
             graphData.datasets[0].values.push(value)
+            
+            if (!firstUsableDate) firstUsableDate = h.date
+            updatedHeatmapDataPoint[dayjs(h.date, 'YYYY/MM/DD').valueOf() / 1000] = h?.total?.u || 0
 
             const nextComulativeValue = value + (comulativeGraphData.datasets[0].values.at(-1) ?? 0)
             comulativeGraphData.labels.push(h.date)
@@ -159,7 +189,7 @@ function loadGraphData(data: AppDetailElement) {
     const mean = graphData.datasets[0].values.reduce((prev, curr) => prev + curr, 0) / graphData.datasets[0].values.length;
     const yMarkers: ChartMarker[] = [
         {
-            label: "Mean: " + mean.toFixed(0) + ' (daily downloads)',
+            label: "Average: " + mean.toFixed(0) + ' (daily downloads)',
             value: mean,
             options: { labelPos: 'left' } // default: 'right'
         }
@@ -183,28 +213,48 @@ function loadGraphData(data: AppDetailElement) {
 
     const chart = new Chart("#chart", { ...commonGraphData, data: graphData })
     const chartComulative = new Chart("#chart-comulative", { ...commonGraphData, data: comulativeGraphData, colors: ['#ff5200'] })
-}
 
-function loadAppData(id: string) {
-    getAppDetails(id).then((res) => {
-        loadGraphData(res)
-        state.appDetails = { ...res }
-        state.name = res.appstream.name
+    let updatedHeatmap = new Chart("#updates-heatmap", {
+        type: 'heatmap',
+        colors: ["#e85d04","#ff8800","#ffba08","#ffdd00","#ffee90"].reverse(),
+        data: {
+            discreteDomains: 0, // default 1
+            dataPoints: updatedHeatmapDataPoint,
+            start: new Date(dayjs(firstUsableDate, 'YYYY/MM/DD').valueOf()),
+            end: new Date(dayjs(data.history.at(-1).date, 'YYYY/MM/DD').valueOf())
+        },
     })
 
+    console.log(updatedHeatmap);
+    
 }
 
+async function loadAppData(id: string) {
+    console.log(id);
+    state.appDetails = undefined
+    
+    const res = await getAppDetails(id)
+
+    state.appDetails = { ...res }
+    state.name = res.appstream.name
+
+    loadGraphData(res)
+}
+
+const appDataPromise: Ref<Promise<void> | null> = ref(null)
 onMounted(function () {
     //@ts-ignore
     const id: string = route.params.id;
     state.id = id;
 
-    loadAppData(id)
+    appDataPromise.value = loadAppData(id)
 })
 
 //@ts-ignore
-watch(() => route.params.id, (newId: string) => {
-    loadAppData(newId)
+watch(() => route.params.id, (newId: string | undefined) => {
+    if (newId) {
+        appDataPromise.value = loadAppData(newId)
+    }
 })
 
 </script>
