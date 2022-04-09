@@ -1,4 +1,4 @@
-export interface ShieldIO {
+export interface ShieldIOBadgeData {
     "schemaVersion": number,
     "label": string;
     "message": string;

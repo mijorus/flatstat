@@ -1,7 +1,9 @@
 import ky from "ky";
 import type { FlatHubAppstreamResponse, SearchData } from "../types/flathub";
+import { ShieldIOBadgeData } from "../types/shields.io";
 
-export const client = ky.create({'prefixUrl': 'https://flathub-stats-backend.vercel.app'})
+const backendBaseUrl = 'https://flathub-stats-backend.vercel.app';
+export const client = ky.create({'prefixUrl': backendBaseUrl})
 export const flathubClient = ky.create({'prefixUrl': 'https://flathub.org/api/v2'})
 
 export interface HistoryElement {
@@ -76,4 +78,8 @@ export async function searchApp(query: string): Promise<SearchData[]>{
 
 export function getAppIconUrl(appId: string) {
     return `https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/${encodeURIComponent(appId)}.png`
+}
+
+export function getShieldIoBadgeDataUrl(appId: string): string {
+    return `https://img.shields.io/endpoint?url=${backendBaseUrl}/badges/${encodeURIComponent(appId)}/shields.io.json`;
 }

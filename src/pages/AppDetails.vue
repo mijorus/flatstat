@@ -33,6 +33,31 @@
             <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
             <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
 
+            <h2 class="is-size-4 mt-6">Badges</h2>
+            <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
+            <div class="mt-4 columns">
+                <div class="column">
+                    <div class="columns is-centered">
+                        <div class="column is-one-fifth p-0">
+                            <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
+                        </div>
+                    </div>
+                    <div class="columns is-centered mt-0 p-0">
+                        <div class="column is-one-fifth p-0">
+                            <div class="control has-icons-right " 
+                                @click="() => copyToClipboard(getShieldIoBadgeDataUrl(state.appDetails.name), '.copied-shieldio-link')"
+                            >
+                                <input class="input is-disabled" type="email" :placeholder="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                <span class="icon is-small is-right" 
+                                    style="cursor: pointer;">
+                                    <i class="gg-copy copied-shieldio-link"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <h2 class="is-size-4 mt-6">Lastest updates</h2>
             <div>
                 <div
@@ -66,9 +91,10 @@ import Base from '../views/Base.vue'
 import { ref, onMounted, reactive, watch, Ref } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
-import { getAppDetails } from "../lib/flathubData";
+import { getAppDetails, getShieldIoBadgeDataUrl } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
 import { primaryColor, defaultDateFormat } from "../lib/utils";
+import { copyToClipboard } from "./../lib/utils";
 import dayjs from "dayjs";
 
 //@ts-ignore
