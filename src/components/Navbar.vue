@@ -26,6 +26,7 @@
                             id="search-bar"
                             class="input is-rounded is-small"
                             type="text"
+                            :name="Math.random().toString(36)"
                             placeholder="Press / to search"
                             v-model="state.query"
                             @keyup="handleSearchQueryChange"
@@ -33,8 +34,8 @@
 
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content" v-if="state.searchResults && state.searchResults.length" style="max-height: 400px; overflow-y: auto;">
-                                <div class="dropdown-item" v-for="result, i in state.searchResults">
-                                    <p style="text-align: left;">
+                                <div class="dropdown-item" v-for="result, i in state.searchResults" @click="() => state.searchResults = undefined">
+                                    <p style="text-align: left;" >
                                         <router-link :to="`/app/${result.app_id}`" class="is-flex is-align-items-center">
                                             <LazyImage :src="getAppIconUrl(result.app_id)" size="is-32x32 mr-2" />
                                             {{result.name}}
