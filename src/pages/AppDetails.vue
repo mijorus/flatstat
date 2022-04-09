@@ -43,9 +43,10 @@
                     <div id="chart-comulative" class=" column"></div>
                 </div>
 
-                <h3 class="is-size-4">Updates heatmap</h3>
+                <h3 class="is-size-4">Updates heatmap (last 12 months)</h3>
+                <p class="has-text-grey is-size-6">Number of updates per day</p>
                 <div class="columns">
-                    <div class="column" style="overflow-x: auto;">
+                    <div class="column is-flex" style="overflow-x: auto; justify-content: center;">
                         <div id="updates-heatmap"> </div>
                     </div>
                 </div>
@@ -175,8 +176,10 @@ function loadGraphData(data: AppDetailElement) {
             graphData.labels.push(h.date)
             graphData.datasets[0].values.push(value)
             
-            if (!firstUsableDate) firstUsableDate = h.date
-            updatedHeatmapDataPoint[dayjs(h.date, 'YYYY/MM/DD').valueOf() / 1000] = h?.total?.u || 0
+            if (dayjs(h.date, 'YYYY/MM/DD').isAfter(dayjs().subtract(1, 'year'))) {
+                if (!firstUsableDate) firstUsableDate = h.date
+                updatedHeatmapDataPoint[dayjs(h.date, 'YYYY/MM/DD').valueOf() / 1000] = h?.total?.u || 0
+            }
 
             const nextComulativeValue = value + (comulativeGraphData.datasets[0].values.at(-1) ?? 0)
             comulativeGraphData.labels.push(h.date)
@@ -218,7 +221,7 @@ function loadGraphData(data: AppDetailElement) {
         type: 'heatmap',
         colors: ["#e85d04","#ff8800","#ffba08","#ffdd00","#ffee90"].reverse(),
         data: {
-            discreteDomains: 0, // default 1
+            discreteDomains: 1, // default 1
             dataPoints: updatedHeatmapDataPoint,
             start: new Date(dayjs(firstUsableDate, 'YYYY/MM/DD').valueOf()),
             end: new Date(dayjs(data.history.at(-1).date, 'YYYY/MM/DD').valueOf())
