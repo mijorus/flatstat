@@ -13,4 +13,23 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color:gainsboro;
+    border-radius: 8px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: darkgray; 
+  border-radius: 8px;
+}
+
 </style>
