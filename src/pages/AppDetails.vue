@@ -71,9 +71,9 @@
                     <div class="columns is-centered mt-0 p-0">
                         <div class="column is-one-fifth p-0">
                             <div class="control has-icons-right " 
-                                @click="() => copyToClipboard(getShieldIoBadgeDataUrl(state.appDetails.name), '.copied-shieldio-link')"
+                                @click="() => copyAppNameToClipBoard('.copied-shieldio-link')"
                             >
-                                <input class="input is-disabled" type="email" :placeholder="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                <input class="input is-disabled" type="email" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
                                 <span class="icon is-small is-right" 
                                     style="cursor: pointer;">
                                     <i class="gg-copy copied-shieldio-link"></i>
@@ -243,6 +243,12 @@ async function loadAppData(id: string) {
     state.name = res.appstream.name
 
     loadGraphData(res)
+}
+
+function copyAppNameToClipBoard(iconTarget: string) {
+    if (state.appDetails?.name) {
+        copyToClipboard(getShieldIoBadgeDataUrl(state.appDetails.name), iconTarget)
+    }
 }
 
 const appDataPromise: Ref<any> = ref(null)
