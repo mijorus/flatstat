@@ -1,6 +1,7 @@
 <template>
     <Base>
         <div class="m-1">
+            <!-- @ts-ignore -->
             <Promised :promise="appDataPromise">
                 <template v-slot:pending>
                     <h1 class="title" >
@@ -224,7 +225,7 @@ function loadGraphData(data: AppDetailElement) {
             discreteDomains: 1, // default 1
             dataPoints: updatedHeatmapDataPoint,
             start: new Date(dayjs(firstUsableDate, 'YYYY/MM/DD').valueOf()),
-            end: new Date(dayjs(data.history.at(-1).date, 'YYYY/MM/DD').valueOf())
+            end: new Date(dayjs(data.history.at(-1)?.date, 'YYYY/MM/DD').valueOf())
         },
     })
 
@@ -244,7 +245,7 @@ async function loadAppData(id: string) {
     loadGraphData(res)
 }
 
-const appDataPromise: Ref<Promise<void> | null> = ref(null)
+const appDataPromise: Ref<any> = ref(null)
 onMounted(function () {
     //@ts-ignore
     const id: string = route.params.id;
