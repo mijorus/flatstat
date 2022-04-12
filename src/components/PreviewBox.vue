@@ -14,10 +14,10 @@
                     </p>
                     <div class="is-size-6">In the last 30 days:</div>
                     <div class="is-size-7 has-text-grey	">
-                        Downloads {{ data.history_sum.i }}
+                        Downloads {{ data.history_sum.i.toLocaleString() }}
                     </div>
                     <div class="is-size-7 has-text-grey	">
-                        Updates {{ data.history_sum.u }}
+                        Updates {{ data.history_sum.u.toLocaleString() }}
                     </div>
                 </div>
             </div>
