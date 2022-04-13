@@ -24,6 +24,8 @@ export interface HistoryElement {
     };
 }
 
+export type SummaryElement = Omit<HistoryElement, 'history'>
+
 export interface AppData {
     name: string;
     icon: string;
@@ -45,16 +47,24 @@ export interface AppDetailElement extends AppData {
     }[];
 }
 
-export function getLastMonth(): Promise<HistoryElement[]> {
+function getAppId(str: string) {
+    return encodeURIComponent(encodeURIComponent(str));
+}
+
+export function getLastMonth(): Promise<SummaryElement[]> {
     return client.get('last_30_days.json').json()
 }
 
+export function getLibrariesSummary(): Promise<SummaryElement[]> {
+    return client.get('libraries_summary.json').json()
+}
+
 export function getAppDetails(appId: string): Promise<AppDetailElement> {
-    return client.get(`app_history/${encodeURIComponent(appId)}.json`).json()
+    return client.get(`app_history/${getAppId(appId)}.json`).json()
 }
 
 export function getAppData(appId: string): Promise<AppData> {
-    return client.get(`app_data/${encodeURIComponent(appId)}.json`).json()
+    return client.get(`app_data/${getAppId(appId)}.json`).json()
 }
 
 let searchData: SearchData[] | undefined = undefined;
@@ -77,9 +87,9 @@ export async function searchApp(query: string): Promise<SearchData[]>{
 }
 
 export function getAppIconUrl(appId: string) {
-    return `https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/${encodeURIComponent(appId)}.png`
+    return `https://dl.flathub.org/repo/appstream/x86_64/icons/128x128/${getAppId(appId)}.png`
 }
 
 export function getShieldIoBadgeDataUrl(appId: string): string {
-    return `https://img.shields.io/endpoint?url=${backendBaseUrl}/badges/${encodeURIComponent(appId)}/shields.io.json`;
+    return `https://img.shields.io/endpoint?url=${backendBaseUrl}/badges/${getAppId(appId)}/shields.io.json`;
 }

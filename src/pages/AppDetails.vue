@@ -19,13 +19,18 @@
                         <h1
                             class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center"
                         >
-                            <LazyImage :src="state.appDetails?.icon" size="is-inline-block is-64x64 mr-2"></LazyImage>
+                            <LazyImage 
+                                :src="state.isLib ? '/flathub-badge-logo.svg' : state.appDetails?.icon" 
+                                size="is-inline-block is-64x64 mr-2" 
+                            />
                             {{ state.name }}
                         </h1>
                         <p class="subtitle is-size-6">
-                            by {{ state.appDetails?.appstream?.developer_name || `${state.name} developers` }}
-                            <br />
-                            <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
+                            <span v-if="!state.isLib && state.appDetails">
+                                by {{ (state.appDetails.appstream?.developer_name || `${state.name} developers`) }}
+                                <br />
+                                <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
+                            </span>
                         </p>
                     </div>
                 </template>
@@ -59,33 +64,35 @@
             <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
             <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
 
-            <h2 class="is-size-4 mt-6">Badges</h2>
-            <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
-            <div class="mt-4 columns">
-                <div class="column">
-                    <div class="columns is-centered">
-                        <div class="column is-one-fifth p-0">
-                            <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
+            <div v-if="!state.isLib">
+                <h2 class="is-size-4 mt-6">Badges</h2>
+                <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
+                <div class="mt-4 columns">
+                    <div class="column">
+                        <div class="columns is-centered">
+                            <div class="column is-one-fifth p-0">
+                                <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="columns is-centered mt-0 p-0">
-                        <div class="column is-one-fifth p-0">
-                            <div class="control has-icons-right " 
-                                @click="() => copyAppNameToClipBoard('.copied-shieldio-link')"
-                            >
-                                <input class="input is-disabled" type="email" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
-                                <span class="icon is-small is-right" 
-                                    style="cursor: pointer;">
-                                    <i class="gg-copy copied-shieldio-link"></i>
-                                </span>
+                        <div class="columns is-centered mt-0 p-0">
+                            <div class="column is-one-fifth p-0">
+                                <div class="control has-icons-right "
+                                    @click="() => copyAppNameToClipBoard('.copied-shieldio-link')"
+                                >
+                                    <input class="input is-disabled" type="email" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                    <span class="icon is-small is-right"
+                                        style="cursor: pointer;">
+                                        <i class="gg-copy copied-shieldio-link"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <h2 class="is-size-4 mt-6">Lastest updates</h2>
-            <div>
+            <div class="releases-box" v-if="state?.appDetails?.appstream?.releases">
+                <h2 class="is-size-4 mt-6">Lastest updates</h2>
                 <div
                     class="columns is-centered has-text-left"
                     v-for="release of state.appDetails.appstream.releases.slice(0, 7)"
@@ -139,6 +146,7 @@ const state: UnwrapNestedRefs<{
     appDetails?: AppDetailElement,
     id?: string,
     name?: string,
+    isLib?: boolean,
 }> = reactive({})
 
 function resetGraphData() {
@@ -240,7 +248,8 @@ async function loadAppData(id: string) {
     const res = await getAppDetails(id)
 
     state.appDetails = { ...res }
-    state.name = res.appstream.name
+    state.isLib = res.name.includes('/') || (res.appstream.name === undefined)
+    state.name = res.appstream?.name ?? res.name
 
     loadGraphData(res)
 }

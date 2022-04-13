@@ -2,7 +2,8 @@
     <div class="box">
         <article class="media">
             <div class="media-left">
-                <LazyImage :src="data.icon" size="is-64x64" />
+                <LazyImage :src="data.icon" size="is-64x64" v-if="!hideIcon" />
+                <img src="/flathub-badge-logo.svg" alt="flatstat logo" class="image is-64x64" v-else>
             </div>
             <div class="media-content">
                 <div class="content">
@@ -12,7 +13,7 @@
                         </router-link>
                         <p class="is-size-7">{{data.name}}</p>
                     </p>
-                    <div class="is-size-6">In the last 30 days:</div>
+                    <div class="is-size-6">{{label}}</div>
                     <div class="is-size-7 has-text-grey	">
                         Downloads {{ data.history_sum.i.toLocaleString() }}
                     </div>
@@ -26,12 +27,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { HistoryElement } from '../lib/flathubData';
+import type { SummaryElement } from '../lib/flathubData';
 import LazyImage from './LazyImage.vue';
 
 const props = defineProps<{
-    data: HistoryElement;
+    data: SummaryElement;
+    hideIcon?: boolean;
+    label: string;
 }>()
 
 </script>

@@ -54,6 +54,9 @@
                     </div>
                     <!-- <a class="navbar-link">More</a> -->
                 </div>
+                <router-link to="/libraries" class="navbar-item">
+                    Libraries
+                </router-link>
             </div>
         </div>
     </nav>
