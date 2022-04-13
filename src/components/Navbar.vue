@@ -35,7 +35,7 @@
 
                         <div class="dropdown-menu" role="menu">
                             <div class="dropdown-content" v-if="state.searchResults && state.searchResults.length" style="max-height: 400px; overflow-y: auto;">
-                                <div class="dropdown-item" v-for="result, i in state.searchResults" @click="() => state.searchResults = undefined">
+                                <div class="dropdown-item" v-for="result, i in state.searchResults" @click="() => handleClickOnSearchItem()">
                                     <p style="text-align: left;" >
                                         <router-link :to="`/app/${result.app_id}`" class="is-flex is-align-items-center">
                                             <LazyImage :src="getAppIconUrl(result.app_id)" size="is-32x32 mr-2" />
@@ -77,7 +77,6 @@
 </style>
 
 <script lang="ts" setup>
-import { NumericLiteral } from '@babel/types';
 import { onMounted, reactive, UnwrapNestedRefs } from 'vue'
 import { searchApp, getAppIconUrl } from '../lib/flathubData';
 import { SearchData } from '../types/flathub';
@@ -110,26 +109,52 @@ function handleDocumentKeydown(e: KeyboardEvent) {
     }
 }
 
+function handleClickOnSearchItem() {
+    state.searchResults = undefined;
+    closeNavbarMobileMenu();
+}
+
+function closeNavbarMobileMenu() {
+    const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    // Add a click event on each of them
+    navbarBurgers.forEach(el => {
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        
+        if (target) {
+            const t = document.getElementById(target);
+
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.remove('is-active');
+            if (t) t.classList.remove('is-active');
+        }
+    });
+}
+
 onMounted(() => {
-    document.addEventListener('keydown', handleDocumentKeydown)
+    document.addEventListener('keydown', handleDocumentKeydown);
 
     // Get all "navbar-burger" elements
-    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
     // Check if there are any navbar burgers
-    if ($navbarBurgers.length > 0) {
+    if (navbarBurgers.length > 0) {
 
         // Add a click event on each of them
-        $navbarBurgers.forEach(el => {
+        navbarBurgers.forEach(el => {
             el.addEventListener('click', () => {
 
                 // Get the target from the "data-target" attribute
                 const target = el.dataset.target;
-                const t = document.getElementById(target);
+                
+                if (target) {
+                    const t = document.getElementById(target);
 
-                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                el.classList.toggle('is-active');
-                if (t) t.classList.toggle('is-active');
+                    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                    el.classList.toggle('is-active');
+                    if (t) t.classList.toggle('is-active');
+                }
 
             });
         });
