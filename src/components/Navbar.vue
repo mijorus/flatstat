@@ -1,12 +1,15 @@
 <template>
     <nav class="navbar is-fixed-top px-2 is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
+            <router-link class="navbar-item" to="/">
+                <span>Flatstat</span>
+            </router-link>
             <a
                 role="button"
                 class="navbar-burger"
                 aria-label="menu"
                 aria-expanded="false"
-                data-target="navbarBasicExample"
+                data-target="main-navbar-menu"
             >
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -14,14 +17,10 @@
             </a>
         </div>
 
-        <div id="navbarBasicExample" class="navbar-menu">
+        <div id="main-navbar-menu" class="navbar-menu">
             <div class="navbar-start">
-                <router-link class="navbar-item" to="/">
-                    <span>Flatstat</span>
-                </router-link>
-
                 <div class="navbar-item">
-                    <div class="dropdown" :class="{'is-active': state.searchResults}">
+                    <div class="dropdown searchbar-dropdown" :class="{'is-active': state.searchResults}">
                         <input
                             id="search-bar"
                             class="input is-rounded is-small"
@@ -57,6 +56,23 @@
         </div>
     </nav>
 </template>
+
+<style scoped lang="scss">
+
+@media screen and (max-width: 768px) {
+    #main-navbar-menu {
+        overflow: visible !important;
+    }
+
+    .searchbar-dropdown {
+        width: 70%;
+
+        .dropdown-menu {
+            width: 100%;
+        }
+    }
+}
+</style>
 
 <script lang="ts" setup>
 import { NumericLiteral } from '@babel/types';
