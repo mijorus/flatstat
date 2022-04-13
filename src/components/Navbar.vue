@@ -2,7 +2,9 @@
     <nav class="navbar is-fixed-top px-2 is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <router-link class="navbar-item" to="/">
-                <span>Flatstat</span>
+                <img src="/flatstat-badge-logo.svg" alt="flatstat logo" class="mr-2">
+                <span class="has-text-weight-bold">Flatstat</span>
+
             </router-link>
             <a
                 role="button"
