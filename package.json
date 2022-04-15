@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^3.1.0",
     "colorthief": "^2.3.2",
     "dayjs": "^1.11.0",
     "frappe-charts": "^1.6.2",

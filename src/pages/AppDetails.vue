@@ -13,7 +13,6 @@
                 </template>
                 <template v-slot>
                     <div
-                    
                         class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
                     >
                         <h1
@@ -44,6 +43,17 @@
                 </template>
             </Promised>
             <div v-show="state.appDetails">
+                <div class="columns is-centered mt-2">
+                    <div class="column is-2">
+                        <Datepicker 
+                            range 
+                            v-model="state.datePickerVal"
+                            :min-date="new Date(2018, 1, 1)" 
+                            :max-date="new Date()"
+                            @update:modelValue="reloadGraphData"
+                        />
+                    </div>
+                </div>
                 <div class="columns" >
                     <div id="chart" class=" column"></div>
                     <div id="chart-comulative" class=" column"></div>
@@ -129,6 +139,7 @@ import type { AppDetailElement } from "../lib/flathubData";
 import { primaryColor, defaultDateFormat } from "../lib/utils";
 import { Promised, usePromise } from "vue-promised";
 import { copyToClipboard } from "./../lib/utils";
+import Datepicker from '@vuepic/vue-datepicker';
 
 import dayjs from "dayjs";
 
@@ -147,7 +158,10 @@ const state: UnwrapNestedRefs<{
     id?: string,
     name?: string,
     isLib?: boolean,
-}> = reactive({})
+    datePickerVal: Date[]
+}> = reactive({
+    datePickerVal: [new Date(dayjs().get('year'), 1, 1), new Date()]
+})
 
 function resetGraphData() {
     return {
@@ -174,6 +188,9 @@ function loadGraphData(data: AppDetailElement) {
     graphData = resetGraphData();
     comulativeGraphData = resetComulativeGraphData();
 
+    const from: dayjs.Dayjs = dayjs(state.datePickerVal[0])
+    const to: dayjs.Dayjs = dayjs(state.datePickerVal[1])
+
     const updatedHeatmapDataPoint: {[key: string]: any} = {}
 
     let last = -1 // will be set > on the first day with at least one download
@@ -182,12 +199,17 @@ function loadGraphData(data: AppDetailElement) {
         const value = h?.total?.i || 0
 
         if (last > 0 && (h.date !== dayjs().format(defaultDateFormat))) {
+            const currentDate: dayjs.Dayjs = dayjs(h.date, 'YYYY/MM/DD');
+            
+            if (currentDate.isBefore(from)) continue
+            else if (currentDate.isAfter(to)) break
+
             graphData.labels.push(h.date)
             graphData.datasets[0].values.push(value)
             
-            if (dayjs(h.date, 'YYYY/MM/DD').isAfter(dayjs().subtract(1, 'year'))) {
+            if (currentDate.isAfter(dayjs().subtract(1, 'year'))) {
                 if (!firstUsableDate) firstUsableDate = h.date
-                updatedHeatmapDataPoint[dayjs(h.date, 'YYYY/MM/DD').valueOf() / 1000] = h?.total?.u || 0
+                updatedHeatmapDataPoint[currentDate.valueOf() / 1000] = h?.total?.u || 0
             }
 
             const nextComulativeValue = value + (comulativeGraphData.datasets[0].values.at(-1) ?? 0)
@@ -239,6 +261,14 @@ function loadGraphData(data: AppDetailElement) {
 
     console.log(updatedHeatmap);
     
+}
+
+function reloadGraphData(dates: Date[]) {
+    console.log(dates);
+    
+    if (state.appDetails) {
+        loadGraphData(state.appDetails)
+    }
 }
 
 async function loadAppData(id: string) {

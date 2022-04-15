@@ -3,7 +3,10 @@
 </template>
 
 <style lang="scss">
-@import "./style/bulma.config.scss"
+
+@import "./style/bulma.config.scss";
+@import "@vuepic/vue-datepicker/dist/main.css";
+
 </style>
 
 <style>
