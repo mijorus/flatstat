@@ -6,7 +6,7 @@
             </h1>
             <p class="subtitle is-size-6">Some statistics from Flathub</p>
         </div>
-        <h2 class="is-size-3 mb-3">Most popular apps in the last 30 days</h2>
+        <h2 class="is-size-3 mb-3">Most downloaded libraries</h2>
         <div v-if="partialList">
             <div class="columns is-multiline">
                 <div v-for="app in partialList" class="column is-half">
