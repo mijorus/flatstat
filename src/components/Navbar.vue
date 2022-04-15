@@ -26,11 +26,11 @@
                         <input
                             id="search-bar"
                             class="input is-rounded is-small"
-                            type="text"
+                            type="search"
                             :name="Math.random().toString(36)"
                             placeholder="Press / to search"
-                            v-model="state.query"
-                            @keyup="handleSearchQueryChange"
+                            v-model.trim="state.query"
+                            @input="handleSearchQueryChange"
                         />
 
                         <div class="dropdown-menu" role="menu">
@@ -91,7 +91,7 @@ const state: UnwrapNestedRefs<{ query: string, searchResults?: SearchData[] }> =
 })
 
 let searchResultsTimeout: number;
-async function handleSearchQueryChange(e: KeyboardEvent) {
+async function handleSearchQueryChange(e: Event) {
     if (state.query.length > 2) {
         clearTimeout(searchResultsTimeout);
         setTimeout(async () => {
