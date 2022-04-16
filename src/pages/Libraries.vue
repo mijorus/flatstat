@@ -4,7 +4,7 @@
             <h1 class="title is-1 ">
                 <p>Libraries</p>
             </h1>
-            <p class="subtitle is-size-6">Some statistics from Flathub</p>
+            <p class="subtitle is-size-6">Libraries are shared packages needed to run the most popular applications</p>
         </div>
         <h2 class="is-size-3 mb-3">Most downloaded libraries</h2>
         <div v-if="partialList">
