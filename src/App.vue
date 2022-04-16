@@ -35,4 +35,12 @@
   border-radius: 8px;
 }
 
+.dp__theme_light {
+    --dp-success-color: #4a86cf !important;
+    --dp-success-color-disabled: #96c0f3;
+}
+
+.pointer {
+    cursor: pointer !important;
+}
 </style>

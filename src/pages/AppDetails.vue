@@ -43,10 +43,16 @@
                 </template>
             </Promised>
             <div v-show="state.appDetails">
-                <div class="columns is-centered mt-2">
-                    <div class="column is-2">
+                <div class="columns is-centered mt-2 is-mobile">
+                    <div class="column is-3-desktop is-10-mobile">
                         <Datepicker 
                             range 
+                            multi-calendars
+                            required
+                            :enable-time-picker="false"
+                            :clearable="false"
+                            inputClassName="has-text-centered" 
+                            :format="defaultDateFormat.replaceAll('Y', 'y').replaceAll('D', 'd')"
                             v-model="state.datePickerVal"
                             :min-date="new Date(2018, 1, 1)" 
                             :max-date="new Date()"
@@ -77,6 +83,7 @@
             <div v-if="!state.isLib">
                 <h2 class="is-size-4 mt-6">Badges</h2>
                 <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
+                <p class="is-size-7 has-text-grey">(ps more coming soon 🤫)</p>
                 <div class="mt-4 columns">
                     <div class="column">
                         <div class="columns is-centered">
@@ -84,16 +91,19 @@
                                 <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
                             </div>
                         </div>
-                        <div class="columns is-centered mt-0 p-0">
-                            <div class="column is-one-fifth p-0">
-                                <div class="control has-icons-right "
-                                    @click="() => copyAppNameToClipBoard('.copied-shieldio-link')"
-                                >
-                                    <input class="input is-disabled" type="email" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
-                                    <span class="icon is-small is-right"
-                                        style="cursor: pointer;">
-                                        <i class="gg-copy copied-shieldio-link"></i>
-                                    </span>
+                        <div class="columns is-centered mt-0 pt-0">
+                            <div class="column pt-0 is-4 is-narrow-mobile">
+                                <div class="px-2">
+                                    <div class="control has-icons-right" 
+                                        style="cursor: pointer;"
+                                        @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')"
+                                    >
+                                        <input class="input pointer" type="text" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                        <span class="icon is-small is-right"
+                                            style="cursor: pointer; z-index: 10;">
+                                            <i class="gg-copy copied-shieldio-link"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +114,7 @@
             <div class="releases-box" v-if="state?.appDetails?.appstream?.releases">
                 <h2 class="is-size-4 mt-6">Lastest updates</h2>
                 <div
-                    class="columns is-centered has-text-left"
+                    class="columns is-centered has-text-left is-mobile"
                     v-for="release of state.appDetails.appstream.releases.slice(0, 7)"
                 >
                     <div class="column is-one-third mt-2" style="border-left: 1px solid lightgrey;">
@@ -197,9 +207,9 @@ function loadGraphData(data: AppDetailElement) {
     let firstUsableDate: string | undefined = undefined;
     for (let h of data.history) {
         const value = h?.total?.i || 0
+        const currentDate: dayjs.Dayjs = dayjs(h.date, 'YYYY/MM/DD');
 
-        if (last > 0 && (h.date !== dayjs().format(defaultDateFormat))) {
-            const currentDate: dayjs.Dayjs = dayjs(h.date, 'YYYY/MM/DD');
+        if (last > 0 && (currentDate.isBefore(dayjs().subtract(2, 'days')))) {
             
             if (currentDate.isBefore(from)) continue
             else if (currentDate.isAfter(to)) break

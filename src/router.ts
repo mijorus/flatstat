@@ -12,6 +12,7 @@ const routes = [
 
 export default VueRouter.createRouter({
     // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
-    history: VueRouter.createWebHistory(),
+    //@ts-ignore
+    history: process.env.NODE_ENV ? VueRouter.createWebHashHistory() : VueRouter.createWebHistory(),
     routes, // short for `routes: routes`
 })
