@@ -39,6 +39,7 @@ const state: UnwrapNestedRefs<{ librariesSummary: SummaryElement[] | null }> = r
 
 onMounted(function() {
     getLibrariesSummary().then((res) => state.librariesSummary = res)
+    document.title = 'Libraries - Flatstats'
 })
 
 </script>

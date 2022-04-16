@@ -292,6 +292,7 @@ async function loadAppData(id: string) {
     state.name = res.appstream?.name ?? res.name
 
     loadGraphData(res)
+    document.title = state.name + ' - Flatstat'
 }
 
 function copyAppNameToClipBoard(iconTarget: string) {

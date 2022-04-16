@@ -36,6 +36,7 @@ const state: UnwrapNestedRefs<{ lastMonthData: SummaryElement[] | null }> = reac
 
 onMounted(function() {
     getLastMonth().then((res) => state.lastMonthData = res)
+    document.title = 'Flatstats - statistics from Flathub'
 })
 
 </script>
