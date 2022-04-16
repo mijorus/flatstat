@@ -6,7 +6,7 @@ import Footer from "../components/Footer.vue";
 <template>
     <Navbar></Navbar>
      <div class="container is-widescreen mt-4">
-         <div>
+         <div >
              <slot></slot>
          </div>
      </div>

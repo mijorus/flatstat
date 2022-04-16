@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box m-3">
         <article class="media">
             <div class="media-left">
                 <LazyImage :src="data.icon" size="is-64x64" v-if="!hideIcon" />
