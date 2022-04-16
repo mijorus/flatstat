@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-fixed-top px-2 is-primary" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-fixed-top is-primary" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <router-link class="navbar-item" to="/">
                 <img src="/flatstat-badge-logo.svg" alt="flatstat logo" class="mr-2">
