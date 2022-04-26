@@ -1,6 +1,7 @@
 import Home from "./pages/Home.vue"
 import AppDetails from "./pages/AppDetails.vue"
 import Libraries from "./pages/Libraries.vue"
+import AllTime from "./pages/AllTime.vue"
 import * as VueRouter from "vue-router";
 
 const routes = [
@@ -8,6 +9,7 @@ const routes = [
     { path: '/home', component: Home },
     { path: '/app/:id', component: AppDetails },
     { path: '/libraries', component: Libraries },
+    { path: '/all-time', component: AllTime },
 ]
 
 export default VueRouter.createRouter({

@@ -57,6 +57,9 @@
                 <router-link to="/libraries" class="navbar-item">
                     Libraries
                 </router-link>
+                <router-link to="/all-time" class="navbar-item">
+                    All time best
+                </router-link>
             </div>
         </div>
     </nav>

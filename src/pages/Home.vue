@@ -5,7 +5,7 @@
                 <img src="/flatstat-badge-logo.svg" alt="flatstat logo" class="image is-128x128">
                 <p>Flatstat</p>
             </h1>
-            <p class="subtitle is-size-6">Some statistics from Flathub</p>
+            <p class="subtitle is-size-6">Browse, explore, visualize statistics from Flathub, the official Flatpak store.</p>
         </div>
         <div class="mb-3">
             <h2 class="is-size-3 ">Most popular apps in the last 30 days</h2>

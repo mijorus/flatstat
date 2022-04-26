@@ -59,6 +59,10 @@ export function getLibrariesSummary(): Promise<SummaryElement[]> {
     return client.get('libraries_summary.json').json()
 }
 
+export function allTime(): Promise<SummaryElement[]> {
+    return client.get('all_time.json').json()
+}
+
 export function getAppDetails(appId: string): Promise<AppDetailElement> {
     return client.get(`app_history/${getAppId(appId)}.json`).json()
 }
