@@ -97,3 +97,7 @@ export function getAppIconUrl(appId: string) {
 export function getShieldIoBadgeDataUrl(appId: string): string {
     return `https://img.shields.io/endpoint?url=${backendBaseUrl}/badges/${getAppId(appId)}/shields.io.json`;
 }
+
+export function getMarkdownShieldIoBadgeDataUrl(appId: string): string {
+    return `<p align="center"><a href="https://flatstat.mijorus.it/app/${appId}"  align="center"><img width="150" src="${getShieldIoBadgeDataUrl(appId)}"></a></p>`;
+}

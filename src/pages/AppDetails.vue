@@ -91,18 +91,41 @@
                                 <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
                             </div>
                         </div>
-                        <div class="columns is-centered mt-0 pt-0">
-                            <div class="column pt-0 is-4 is-narrow-mobile">
-                                <div class="px-2">
-                                    <div class="control has-icons-right" 
-                                        style="cursor: pointer;"
-                                        @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')"
-                                    >
-                                        <input class="input pointer" type="text" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
-                                        <span class="icon is-small is-right"
-                                            style="cursor: pointer; z-index: 10;">
-                                            <i class="gg-copy copied-shieldio-link"></i>
-                                        </span>
+                        <div class="columns is-centered mt-0 pt-0 is-multiline">
+                            <div class="column is-full">
+                                <div class="columns is-centered ">
+                                    <div class="column pt-0 is-4 is-narrow-mobile">
+                                        <div class="px-2">
+                                            <div class="control has-icons-right"
+                                                style="cursor: pointer;"
+                                                @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')"
+                                            >
+                                                <input class="input pointer" type="text" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                                <span class="icon is-small is-right"
+                                                    style="cursor: pointer; z-index: 10;">
+                                                    <i class="gg-copy copied-shieldio-link"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-full">
+                                <div class="columns is-centered">
+                                    <div class="column pt-0 is-4 is-narrow-mobile">
+                                        <p>Link to this page in Markdown</p>
+                                        <div class="px-2">
+                                            <div class="control has-icons-right"
+                                                style="cursor: pointer;"
+                                                @click.prevent="() => copyToClipboard( getMarkdownShieldIoBadgeDataUrl(state.appDetails.name), 'copied-shieldio-md-link' )"
+                                            >
+                                                <input class="input pointer" type="text" :value="`${getMarkdownShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                                <span class="icon is-small is-right"
+                                                    style="cursor: pointer; z-index: 10;">
+                                                    <i class="gg-copy copied-shieldio-md-link"></i>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +167,7 @@ import Base from '../views/Base.vue'
 import { ref, onMounted, reactive, watch, Ref, VueElement } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
-import { getAppDetails, getShieldIoBadgeDataUrl } from "../lib/flathubData";
+import { getAppDetails, getShieldIoBadgeDataUrl, getMarkdownShieldIoBadgeDataUrl } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
 import { primaryColor, defaultDateFormat } from "../lib/utils";
 import { Promised, usePromise } from "vue-promised";
@@ -297,7 +320,7 @@ async function loadAppData(id: string) {
 
 function copyAppNameToClipBoard(iconTarget: string) {
     if (state.appDetails?.name) {
-        copyToClipboard(getShieldIoBadgeDataUrl(state.appDetails.name), iconTarget)
+        copyToClipboard( getShieldIoBadgeDataUrl(state.appDetails.name), iconTarget )
     }
 }
 
