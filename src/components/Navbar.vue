@@ -42,7 +42,7 @@
                                             {{result.name}}
                                         </router-link>
                                     </p>
-                                    <hr class="dropdown-divider" v-if="i !== (state.searchResults.length - 1)"/>
+                                    <hr class="dropdown-divider" v-if="state.searchResults && i !== (state.searchResults.length - 1)"/>
                                 </div>
                             </div>
                             <div class="dropdown-content" v-else-if="state.searchResults?.length === 0">

@@ -117,7 +117,7 @@
                                         <div class="px-2">
                                             <div class="control has-icons-right"
                                                 style="cursor: pointer;"
-                                                @click.prevent="() => copyToClipboard( getMarkdownShieldIoBadgeDataUrl(state.appDetails.name), 'copied-shieldio-md-link' )"
+                                                @click.prevent="() => copyToClipboard( getMarkdownShieldIoBadgeDataUrl((state?.appDetails?.name || '')), 'copied-shieldio-md-link' )"
                                             >
                                                 <input class="input pointer" type="text" :value="`${getMarkdownShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
                                                 <span class="icon is-small is-right"
