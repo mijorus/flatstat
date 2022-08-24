@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && wget -O ./dist/sitemap.xml https://flathub-stats-backend.vercel.app/sitemap.xml",
+    "build": "wget -O ./tmp/search_data.json https://flathub-stats-backend.vercel.app/search_data.json && vue-tsc --noEmit && vite build && wget -O ./dist/sitemap.xml https://flathub-stats-backend.vercel.app/sitemap.xml",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,9 +21,11 @@
     "@vitejs/plugin-vue": "^2.2.0",
     "bulma": "^0.9.3",
     "node-sass": "^7.0.1",
+    "prerender-spa-plugin": "^3.0.0-beta.2",
     "sass": "^1.49.9",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
+    "vite-plugin-prerender": "^1.0.7",
     "vue-tsc": "^0.29.8"
   }
 }
