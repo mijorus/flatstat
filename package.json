@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "wget -O ./tmp/search_data.json https://flathub-stats-backend.vercel.app/search_data.json && vue-tsc --noEmit && vite build && wget -O ./dist/sitemap.xml https://flathub-stats-backend.vercel.app/sitemap.xml",
+    "build": "node init.js && vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "ky": "^0.30.0",
     "vue": "^3.2.25",
     "vue-promised": "git+https://github.com/mijorus/vue-promised#personal-v2-with-dist-folder",
+    "download": "^8.0.0",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
