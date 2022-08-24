@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="150" src="https://flatstat.mijorus.it/flatstat-badge-logo.svg">
+  <img width="150" src="/flatstat-badge-logo.svg">
 </p>
 
 # Flatstat
