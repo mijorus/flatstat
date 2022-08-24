@@ -26,7 +26,7 @@ export default defineConfig({
             routes,
             renderer: new Renderer({
                 // renderAfterElementExists: '.loaded',
-                maxConcurrentRoutes: 20,
+                maxConcurrentRoutes: 50,
                 skipThirdPartyRequests: false,
                 renderAfterTime: 3000,
                 consoleHandler(route, message) {
