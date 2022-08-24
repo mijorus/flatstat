@@ -1,16 +1,5 @@
 {
     "github": {
         "silent": true
-    },
-    "redirects": {
-        "routes": [
-            {
-                "handle": "filesystem"
-            },
-            {
-                "src": "/(.*)",
-                "dest": "/index.html"
-            }
-        ]
     }
 }
