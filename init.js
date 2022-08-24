@@ -1,7 +1,9 @@
 const download = require('download');
 const fs = require('fs')
 
-[`${__dirname}/tmp/search_data.json`, `${__dirname}}/dist/sitemap.xml`].forEach(element => {
+const filesToDelete = [`${__dirname}/tmp/search_data.json`, `${__dirname}}/dist/sitemap.xml`]
+
+filesToDelete.forEach(element => {
     if (fs.existsSync(element)) {
         fs.unlinkSync(element)
     }
