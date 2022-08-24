@@ -1,6 +1,6 @@
 <template>
     <Base>
-        <div class="mb-6">
+        <div class="loaded mb-6">
             <h1 class="title is-1 ">
                 <p>Libraries</p>
             </h1>

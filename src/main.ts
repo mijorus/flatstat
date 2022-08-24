@@ -12,4 +12,8 @@ app.use(router)
 app.component('Promised', Promised)
 app.component('Datepicker', Datepicker)
 
-app.mount('#app')
+// app.mount('#app')
+
+document.addEventListener('DOMContentLoaded', function () {
+    app.mount('#app')
+})

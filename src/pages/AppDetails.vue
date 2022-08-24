@@ -12,7 +12,7 @@
                 </h1>
             </template>
             <template v-slot>
-                <div class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center">
+                <div class="loaded is-flex is-flex-direction-column is-align-items-center is-justify-content-center">
                     <h1 class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center">
                         <LazyImage :src="state.isLib ? '/flathub-badge-logo.svg' : state.appDetails?.icon"
                             size="is-inline-block is-64x64 mr-2" />
@@ -312,8 +312,8 @@ async function loadAppData(id: string) {
     state.isLib = res.name.includes('/') || (res.appstream.name === undefined)
     state.name = res.appstream?.name ?? res.name
 
-    loadGraphData(res)
     document.title = state.name + ' - Flatstat'
+    loadGraphData(res)
 }
 
 function copyAppNameToClipBoard(iconTarget: string) {
@@ -325,7 +325,7 @@ function copyAppNameToClipBoard(iconTarget: string) {
 const appDataPromise: Ref<any> = ref(null)
 onMounted(function () {
     //@ts-ignore
-    const id: string = route.params.id;
+    const id: string = route.params.id || window.location.pathname.split('/')[2];;
     state.id = id;
 
     appDataPromise.value = loadAppData(id)
@@ -333,8 +333,9 @@ onMounted(function () {
 
 //@ts-ignore
 watch(() => route.params.id, (newId: string | undefined) => {
-    if (newId) {
-        appDataPromise.value = loadAppData(newId)
+    const loadId = newId || window.location.pathname.split('/')[2];
+    if (loadId) {
+        appDataPromise.value = loadAppData(loadId)
     }
 })
 

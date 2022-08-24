@@ -6,14 +6,13 @@ import searchData from './tmp/search_data.json'
 
 const Renderer = vitePrerender.PuppeteerRenderer
 
-const routes =  ['/','/libraries']
-
-// const searchDataString = fs.readFileSync('./tmp/search_data.json',{encoding:'utf8', flag:'r'})
-// const searchData = JSON.parse(searchDataString)
+let routes =  ['/','/libraries']
 
 searchData.forEach(element => {
     routes.push('/app/' + element.app_id)
 });
+
+// routes = routes.slice(0, 30)
 
 
 // https://vitejs.dev/config/
@@ -26,8 +25,10 @@ export default defineConfig({
             // Required - Routes to render.
             routes,
             renderer: new Renderer({
-                renderAfterTime: 1000,
+                // renderAfterElementExists: '.loaded',
                 maxConcurrentRoutes: 20,
+                skipThirdPartyRequests: false,
+                renderAfterTime: 3000,
                 consoleHandler(route, message) {
                     console.log(`Rendering ${routes.indexOf(route)} / ${routes.length}`)
                 }

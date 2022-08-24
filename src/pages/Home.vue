@@ -1,6 +1,6 @@
 <template>
     <Base>
-        <div class="mb-6">
+        <div class="loaded mb-6">
             <h1 class="title is-1 is-flex is-justify-content-center is-align-items-center" style="gap: 10px;">
                 <img src="/flatstat-badge-logo.svg" alt="flatstat logo" class="image is-128x128">
                 <p>Flatstat</p>
