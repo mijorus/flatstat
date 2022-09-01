@@ -45,6 +45,7 @@
                 <div class="column is-3-desktop is-10-mobile">
                     <Datepicker range multi-calendars required :enable-time-picker="false" :clearable="false"
                         inputClassName="has-text-centered"
+                        :textInput="true"
                         :format="defaultDateFormat.replaceAll('Y', 'y').replaceAll('D', 'd')"
                         v-model="state.datePickerVal" :min-date="new Date(2018, 1, 1)" :max-date="new Date()"
                         @update:modelValue="reloadGraphData" />
@@ -54,6 +55,7 @@
                 <div id="chart" class=" column"></div>
                 <div id="chart-comulative" class=" column"></div>
             </div>
+
 
             <h3 class="is-size-4">Updates heatmap (last 12 months)</h3>
             <p class="has-text-grey is-size-6">Number of updates per day</p>
@@ -243,10 +245,10 @@ function loadGraphData(data: AppDetailElement) {
         while (scannedDate.format('YYYY/MM/DD') !== dayjs(state.datePickerVal[0]).format('YYYY/MM/DD')) {
             graphData.labels.unshift(scannedDate.format('YYYY/MM/DD'))
             graphData.datasets[0].values.unshift(0)
-    
+
             comulativeGraphData.labels.unshift(scannedDate.format('YYYY/MM/DD'))
             comulativeGraphData.datasets[0].values.unshift(0)
-    
+
             scannedDate = scannedDate.subtract(1, 'day')
             if (scannedDate.format('YYYY/MM/DD') === firstDateInHistory) {
                 break;
