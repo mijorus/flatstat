@@ -25,6 +25,10 @@
                             <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
                         </span>
                     </p>
+                    <div class="is-size-7">
+                        <p v-html="state.appDetails?.appstream.description.replaceAll('script>', '')">
+                        </p>
+                    </div>
                 </div>
             </template>
             <template v-slot:rejected="err">
