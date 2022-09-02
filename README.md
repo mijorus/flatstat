@@ -15,4 +15,4 @@ Features:
 
 ## Data source
 
-All the data comes from Flathub's [official server](https://flathub.org/stats): an automatic script downloads the data daily, splits it into chunks and re-upload the files
+All the data comes from Flathub's [official server](https://flathub.org/stats): an automatic script downloads the data daily, splits it into chunks and re-upload the files on my hosting provider.
