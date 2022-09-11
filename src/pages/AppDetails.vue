@@ -228,7 +228,7 @@ function loadGraphData(data: AppDetailElement) {
                 updatedHeatmapDataPoint[currentDate.valueOf() / 1000] = h?.total?.u || 0
             }
 
-            const nextComulativeValue = value + (comulativeGraphData.datasets[0].values.at(-1) ?? 0)
+            const nextComulativeValue = value + (comulativeGraphData.datasets[0].values[comulativeGraphData.datasets[0].values.length - 1] ?? 0)
             comulativeGraphData.labels.push(h.date)
             comulativeGraphData.datasets[0].values.push(nextComulativeValue)
         }
@@ -292,7 +292,7 @@ function loadGraphData(data: AppDetailElement) {
             discreteDomains: 1, // default 1
             dataPoints: updatedHeatmapDataPoint,
             start: new Date(dayjs(firstUsableDate, 'YYYY/MM/DD').valueOf()),
-            end: new Date(dayjs(data.history.at(-1)?.date, 'YYYY/MM/DD').valueOf())
+            end: new Date(dayjs(data.history[data.history.length - 1].date, 'YYYY/MM/DD').valueOf())
         },
     })
 

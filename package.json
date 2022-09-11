@@ -11,11 +11,11 @@
     "@vuepic/vue-datepicker": "^3.1.0",
     "colorthief": "^2.3.2",
     "dayjs": "^1.11.0",
+    "download": "^8.0.0",
     "frappe-charts": "^1.6.2",
     "ky": "^0.30.0",
     "vue": "^3.2.25",
     "vue-promised": "git+https://github.com/mijorus/vue-promised#personal-v2-with-dist-folder",
-    "download": "^8.0.0",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
@@ -27,6 +27,6 @@
     "typescript": "4.5.4",
     "vite": "^2.8.0",
     "vite-plugin-prerender": "^1.0.7",
-    "vue-tsc": "0.29.8"
+    "vue-tsc": "^0.29.8"
   }
 }
