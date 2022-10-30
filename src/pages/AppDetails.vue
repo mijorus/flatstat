@@ -25,10 +25,6 @@
                             <a :href="state.appDetails?.url" class="is-size-7">Open on Flathub</a>
                         </span>
                     </p>
-                    <div class="is-size-7">
-                        <p v-html="state.appDetails?.appstream.description.replaceAll('script>', '')">
-                        </p>
-                    </div>
                 </div>
             </template>
             <template v-slot:rejected="err">
@@ -54,6 +50,13 @@
             <div class="columns">
                 <div id="chart" class=" column"></div>
                 <div id="chart-comulative" class=" column"></div>
+            </div>
+
+            <div class="container is-max-desktop">
+                <div class="is-size-7 content mb-6" style="text-align: left;">
+                    <p v-html="state.appDetails?.appstream.description.replaceAll('script>', '')">
+                    </p>
+                </div>
             </div>
 
 
