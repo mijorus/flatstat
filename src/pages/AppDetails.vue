@@ -14,8 +14,7 @@
             <template v-slot>
                 <div class="loaded is-flex is-flex-direction-column is-align-items-center is-justify-content-center">
                     <h1 class="title is-flex is-flex-direction-row is-align-items-center is-justify-content-center">
-                        <LazyImage :src="state.isLib ? '/flathub-badge-logo.svg' : state.appDetails?.icon"
-                            size="is-inline-block is-64x64 mr-2" />
+                        <LazyImage :src="state.isLib ? '/flathub-badge-logo.svg' : state.appDetails?.icon" size="is-inline-block is-64x64 mr-2" />
                         {{ state.name }}
                     </h1>
                     <p class="subtitle is-size-6">
@@ -39,11 +38,8 @@
         <div v-show="state.appDetails">
             <div class="columns is-centered mt-2 is-mobile">
                 <div class="column is-3-desktop is-10-mobile">
-                    <Datepicker range multi-calendars required :enable-time-picker="false" :clearable="false"
-                        inputClassName="has-text-centered"
-                        :textInput="true"
-                        :format="defaultDateFormat.replaceAll('Y', 'y').replaceAll('D', 'd')"
-                        v-model="state.datePickerVal" :min-date="new Date(2018, 1, 1)" :max-date="new Date()"
+                    <Datepicker range multi-calendars required :enable-time-picker="false" :clearable="false" inputClassName="has-text-centered" :textInput="true"
+                        :format="defaultDateFormat.replaceAll('Y', 'y').replaceAll('D', 'd')" v-model="state.datePickerVal" :min-date="new Date(2018, 1, 1)" :max-date="new Date()"
                         @update:modelValue="reloadGraphData" />
                 </div>
             </div>
@@ -91,10 +87,8 @@
                             <div class="columns is-centered ">
                                 <div class="column pt-0 is-4 is-narrow-mobile">
                                     <div class="px-2">
-                                        <div class="control has-icons-right" style="cursor: pointer;"
-                                            @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')">
-                                            <input class="input pointer" type="text"
-                                                :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                        <div class="control has-icons-right" style="cursor: pointer;" @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')">
+                                            <input class="input pointer" type="text" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
                                             <span class="icon is-small is-right" style="cursor: pointer; z-index: 10;">
                                                 <i class="gg-copy copied-shieldio-link"></i>
                                             </span>
@@ -110,9 +104,7 @@
                                     <div class="px-2">
                                         <div class="control has-icons-right" style="cursor: pointer;"
                                             @click.prevent="() => copyToClipboard(getMarkdownShieldIoBadgeDataUrl((state?.appDetails?.name || '')), 'copied-shieldio-md-link')">
-                                            <input class="input pointer" type="text"
-                                                :value="`${getMarkdownShieldIoBadgeDataUrl(state.appDetails.name)}`"
-                                                readonly>
+                                            <input class="input pointer" type="text" :value="`${getMarkdownShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
                                             <span class="icon is-small is-right" style="cursor: pointer; z-index: 10;">
                                                 <i class="gg-copy copied-shieldio-md-link"></i>
                                             </span>
@@ -128,19 +120,18 @@
 
         <div class="releases-box" v-if="state?.appDetails?.appstream?.releases">
             <h2 class="is-size-4 mt-6">Lastest updates</h2>
-            <div class="columns is-centered has-text-left is-mobile"
-                v-for="release of state.appDetails.appstream.releases.slice(0, 7)">
+            <div class="columns is-centered has-text-left is-mobile" v-for="release of state.appDetails.appstream.releases.slice(0, 7)">
                 <div class="column is-one-third mt-2" style="border-left: 1px solid lightgrey;">
                     <p>
                         Version: {{ release.version }}
                         <span v-if="release.type === 'stable'" class="tag is-success is-light is-normal">stable</span>
-                        <span v-else-if="release.type !== undefined" class="tag is-warning is-light is-normal">{{
-                                release.type
-                        }}</span>
+                        <span v-else-if="release.type !== undefined" class="tag is-warning is-light is-normal">
+                            {{ release.type }}
+                        </span>
                     </p>
                     <p class="is-size-7 has-text-grey">{{ dayjs(parseInt(release.timestamp) *
-                            1000).format(defaultDateFormat)
-                    }}</p>
+        1000).format(defaultDateFormat)
+                        }}</p>
                 </div>
             </div>
         </div>
@@ -179,7 +170,7 @@ const state: UnwrapNestedRefs<{
     isLib?: boolean,
     datePickerVal: Date[]
 }> = reactive({
-    datePickerVal: [new Date(dayjs().get('year'), 1, 1), new Date()]
+    datePickerVal: [dayjs().subtract(1, 'month').toDate(), new Date()]
 })
 
 function resetGraphData() {
@@ -218,8 +209,7 @@ function loadGraphData(data: AppDetailElement) {
         const value = h?.total?.i || 0
         const currentDate: dayjs.Dayjs = dayjs(h.date, 'YYYY/MM/DD');
 
-        if (last > 0 && (currentDate.isBefore(dayjs().subtract(2, 'days')))) {
-
+        if ((last > 0) && (currentDate.isBefore(dayjs().subtract(2, 'days')))) {
             if (currentDate.isBefore(from)) continue
             else if (currentDate.isAfter(to)) break
 
@@ -285,8 +275,10 @@ function loadGraphData(data: AppDetailElement) {
         },
     }
 
-    const chart = new Chart("#chart", { ...commonGraphData, data: graphData })
-    const chartComulative = new Chart("#chart-comulative", { ...commonGraphData, data: comulativeGraphData, colors: ['#ff5200'] })
+    console.log(graphData);
+    
+    new Chart("#chart", { ...commonGraphData, data: graphData })
+    new Chart("#chart-comulative", { ...commonGraphData, data: comulativeGraphData, colors: ['#ff5200'] })
 
     let updatedHeatmap = new Chart("#updates-heatmap", {
         type: 'heatmap',
