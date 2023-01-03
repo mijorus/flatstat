@@ -5,9 +5,6 @@
                 <strong>Flatstat</strong> by
                 mijorus. Source code on <a href="https://github.com/mijorus/flatstat">GitHub.</a>
             </p>
-            <p class="is-size-7 has-text-grey">
-                This project is still WIP. Please forget about missing features and bugs.
-            </p>
         </div>
     </footer>
 </template>
