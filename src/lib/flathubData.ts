@@ -71,6 +71,10 @@ export function getAppData(appId: string): Promise<AppData> {
     return client.get(`app_data/${getAppId(appId)}.json`).json()
 }
 
+export function getAppReviews(appId: string): Promise<AppData> {
+    return client.get(`app_reviews/${getAppId(appId)}.json`).json()
+}
+
 let searchData: SearchData[] | undefined = undefined;
 export async function searchApp(query: string): Promise<SearchData[]>{
     if (!searchData) {

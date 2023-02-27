@@ -66,48 +66,72 @@
         </div>
     </div>
 
-    <div v-if="state.appDetails" class="mt-6">
-
-        <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
-        <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
-
-        <div v-if="!state.isLib">
-            <h2 class="is-size-4 mt-6">Badges</h2>
-            <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
-            <p class="is-size-7 has-text-grey">(ps more coming soon 🤫)</p>
-            <div class="mt-4 columns">
-                <div class="column">
-                    <div class="columns is-centered">
-                        <div class="column is-one-fifth p-0">
-                            <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
+    <div class="columns">
+        <div v-if="!state.isLib && state.reviews" class="column is-half">
+            <h2 class="is-size-4 mt-6">Reviews</h2>
+            <p class="has-text-grey">User reviews and ratings from <a href="https://odrs.gnome.org/">GNOME's ODRS project</a></p>
+            <div v-for="r in state.reviews.reviews" class="my-4 has-text-left">
+                <div class="panel">
+                    <div class="panel-heading">{{ r.summary }}</div>
+                    <div class="panel-block"  style="overflow-y: hidden;">
+                        <div>
+                            <p class="">👤 <b>{{ r.user_display }}</b></p>
+                            <p class="has-text-grey">version: {{ r.version }}</p>
+                            <div class="mb-3"></div>
+                            <p style="white-space: normal;">
+                                {{ r.description }}
+                            </p>
                         </div>
                     </div>
-                    <div class="columns is-centered mt-0 pt-0 is-multiline">
-                        <div class="column is-full">
-                            <div class="columns is-centered ">
-                                <div class="column pt-0 is-4 is-narrow-mobile">
-                                    <div class="px-2">
-                                        <div class="control has-icons-right" style="cursor: pointer;" @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')">
-                                            <input class="input pointer" type="text" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
-                                            <span class="icon is-small is-right" style="cursor: pointer; z-index: 10;">
-                                                <i class="gg-copy copied-shieldio-link"></i>
-                                            </span>
+                </div>
+                <!-- <p class="is-2" style="text-align: left;">{{ r.summary }}</p> -->
+            </div>
+            
+        </div>
+        <div v-if="state.appDetails" class="mt-6 column">
+
+            <div class="p-3 has-background-light" style="border-radius: 10px;">
+                <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
+                <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
+                <div v-if="!state.isLib">
+                    <h2 class="is-size-4 mt-6">Badges</h2>
+                    <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
+                    <p class="is-size-7 has-text-grey">(ps more coming soon 🤫)</p>
+                    <div class="mt-4 columns">
+                        <div class="column">
+                            <div class="columns is-centered">
+                                <div class="column is-one-fifth p-0">
+                                    <img :src="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" />
+                                </div>
+                            </div>
+                            <div class="columns is-centered mt-0 pt-0 is-multiline">
+                                <div class="column is-full">
+                                    <div class="columns is-centered ">
+                                        <div class="column pt-0 is-10 is-narrow-mobile" style="max-width: 500px;">
+                                            <div class="px-2">
+                                                <div class="control has-icons-right" style="cursor: pointer;" @click.prevent="() => copyAppNameToClipBoard('.copied-shieldio-link')">
+                                                    <input class="input pointer" type="text" :value="`${getShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                                    <span class="icon is-small is-right" style="cursor: pointer; z-index: 10;">
+                                                        <i class="gg-copy copied-shieldio-link"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="column is-full">
-                            <div class="columns is-centered">
-                                <div class="column pt-0 is-4 is-narrow-mobile">
-                                    <p>Link to this page in Markdown</p>
-                                    <div class="px-2">
-                                        <div class="control has-icons-right" style="cursor: pointer;"
-                                            @click.prevent="() => copyToClipboard(getMarkdownShieldIoBadgeDataUrl((state?.appDetails?.name || '')), 'copied-shieldio-md-link')">
-                                            <input class="input pointer" type="text" :value="`${getMarkdownShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
-                                            <span class="icon is-small is-right" style="cursor: pointer; z-index: 10;">
-                                                <i class="gg-copy copied-shieldio-md-link"></i>
-                                            </span>
+                                <div class="column is-full">
+                                    <div class="columns is-centered">
+                                        <div class="column pt-0 is-10 is-narrow-mobile" style="max-width: 500px;">
+                                            <p>Link to this page in Markdown</p>
+                                            <div class="px-2">
+                                                <div class="control has-icons-right" style="cursor: pointer;"
+                                                    @click.prevent="() => copyToClipboard(getMarkdownShieldIoBadgeDataUrl((state?.appDetails?.name || '')), 'copied-shieldio-md-link')">
+                                                    <input class="input pointer" type="text" :value="`${getMarkdownShieldIoBadgeDataUrl(state.appDetails.name)}`" readonly>
+                                                    <span class="icon is-small is-right" style="cursor: pointer; z-index: 10;">
+                                                        <i class="gg-copy copied-shieldio-md-link"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -115,23 +139,22 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="releases-box" v-if="state?.appDetails?.appstream?.releases">
-            <h2 class="is-size-4 mt-6">Lastest updates</h2>
-            <div class="columns is-centered has-text-left is-mobile" v-for="release of state.appDetails.appstream.releases.slice(0, 7)">
-                <div class="column is-one-third mt-2" style="border-left: 1px solid lightgrey;">
-                    <p>
-                        Version: {{ release.version }}
-                        <span v-if="release.type === 'stable'" class="tag is-success is-light is-normal">stable</span>
-                        <span v-else-if="release.type !== undefined" class="tag is-warning is-light is-normal">
-                            {{ release.type }}
-                        </span>
-                    </p>
-                    <p class="is-size-7 has-text-grey">{{ dayjs(parseInt(release.timestamp) *
-        1000).format(defaultDateFormat)
-                        }}</p>
+                <div class="releases-box" v-if="state?.appDetails?.appstream?.releases">
+                    <h2 class="is-size-4 mt-6">Lastest updates</h2>
+                    <div class="columns is-centered has-text-left is-mobile" v-for="release of state.appDetails.appstream.releases.slice(0, 7)">
+                        <div class="column is-one-third mt-2" style="border-left: 1px solid lightgrey;">
+                            <p>
+                                Version: {{ release.version }}
+                                <span v-if="release.type === 'stable'" class="tag is-success is-light is-normal">stable</span>
+                                <span v-else-if="release.type !== undefined" class="tag is-warning is-light is-normal">
+                                    {{ release.type }}
+                                </span>
+                            </p>
+                            <p class="is-size-7 has-text-grey">{{ dayjs(parseInt(release.timestamp) *
+                                1000).format(defaultDateFormat)
+                            }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,7 +167,7 @@ import Base from '../views/Base.vue'
 import { ref, onMounted, reactive, watch, Ref, VueElement } from "vue";
 import { useRouter, useRoute } from 'vue-router'
 import type { UnwrapNestedRefs } from "vue";
-import { getAppDetails, getShieldIoBadgeDataUrl, getMarkdownShieldIoBadgeDataUrl } from "../lib/flathubData";
+import { getAppDetails, getShieldIoBadgeDataUrl, getMarkdownShieldIoBadgeDataUrl, getAppReviews } from "../lib/flathubData";
 import type { AppDetailElement } from "../lib/flathubData";
 import { primaryColor, defaultDateFormat } from "../lib/utils";
 import { Promised, usePromise } from "vue-promised";
@@ -168,6 +191,7 @@ const state: UnwrapNestedRefs<{
     id?: string,
     name?: string,
     isLib?: boolean,
+    reviews?: any,
     datePickerVal: Date[]
 }> = reactive({
     datePickerVal: [dayjs().subtract(1, 'month').toDate(), new Date()]
@@ -276,7 +300,7 @@ function loadGraphData(data: AppDetailElement) {
     }
 
     console.log(graphData);
-    
+
     new Chart("#chart", { ...commonGraphData, data: graphData })
     new Chart("#chart-comulative", { ...commonGraphData, data: comulativeGraphData, colors: ['#ff5200'] })
 
@@ -315,6 +339,13 @@ async function loadAppData(id: string) {
 
     document.title = state.name + ' - Flatstat'
     loadGraphData(res)
+
+    try {
+        state.reviews = await getAppReviews(id);
+
+    } catch {
+        console.log('No reviews found for this app');
+    }
 }
 
 function copyAppNameToClipBoard(iconTarget: string) {
