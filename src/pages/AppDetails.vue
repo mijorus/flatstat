@@ -70,8 +70,8 @@
         <div v-if="!state.isLib && state.reviews" class="column is-half">
             <h2 class="is-size-4 mt-6">Reviews</h2>
             <p class="has-text-grey">User reviews and ratings from <a href="https://odrs.gnome.org/">GNOME's ODRS project</a></p>
-            <div v-for="r in state.reviews.reviews" class="my-4 has-text-left">
-                <div class="panel">
+            <div v-for="r, index in state.reviews.reviews" class="my-4 has-text-left">
+                <div class="panel" v-show="(index < 20) || state.reviewsExpanded">
                     <div class="panel-heading">{{ r.summary }}</div>
                     <div class="panel-block"  style="overflow-y: hidden;">
                         <div>
@@ -87,6 +87,9 @@
                 <!-- <p class="is-2" style="text-align: left;">{{ r.summary }}</p> -->
             </div>
             
+            <div v-if="state.reviews.reviews.length > 20">
+                <button class="button btn" @click="state.reviewsExpanded = true">Show all</button>
+            </div>
         </div>
         <div v-if="state.appDetails" class="mt-6 column">
 
@@ -192,8 +195,10 @@ const state: UnwrapNestedRefs<{
     name?: string,
     isLib?: boolean,
     reviews?: any,
+    reviewsExpanded: boolean,
     datePickerVal: Date[]
 }> = reactive({
+    reviewsExpanded: false,
     datePickerVal: [dayjs().subtract(1, 'month').toDate(), new Date()]
 })
 
