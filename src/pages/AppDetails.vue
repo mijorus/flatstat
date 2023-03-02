@@ -93,7 +93,7 @@
         </div>
         <div v-if="state.appDetails" class="mt-6 column">
 
-            <div class="p-3 has-background-light" style="border-radius: 10px;">
+            <div class="p-3 has-background-light" style="border-radius: 10px; position: sticky; top:0;">
                 <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
                 <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
                 <div v-if="!state.isLib">

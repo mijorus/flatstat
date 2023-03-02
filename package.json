@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "node init.js && vue-tsc --noEmit && vite build && node postBuild.js",
+    "build": "node beforeBuild.js && vue-tsc --noEmit && vite build && node postBuild.js",
     "preview": "vite preview"
   },
   "dependencies": {
