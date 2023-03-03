@@ -49,7 +49,7 @@
             </div>
 
             <div class="container is-max-desktop">
-                <div class="is-size-7 content mb-6" style="text-align: left;">
+                <div class="is-size-6 content mb-6" style="text-align: left;">
                     <p v-html="state.appDetails?.appstream.description.replaceAll('script>', '')">
                     </p>
                 </div>
@@ -93,7 +93,7 @@
         </div>
         <div v-if="state.appDetails" class="mt-6 column">
 
-            <div class="p-3 has-background-light" style="border-radius: 10px; position: sticky; top:0;">
+            <div class="p-3 has-background-light" style="border-radius: 10px;">
                 <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
                 <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
                 <div v-if="!state.isLib">
