@@ -70,10 +70,16 @@
         <div v-if="!state.isLib && state.reviews" class="column is-half">
             <h2 class="is-size-4 mt-6">Reviews</h2>
             <p class="has-text-grey">User reviews and ratings from <a href="https://odrs.gnome.org/">GNOME's ODRS project</a></p>
+
+            <div v-if="state.reviews.ratings && (getRating() !== null)">
+
+                {{ getRating()?.toFixed(1) }}<div class="stars" :style="'--rating:' + getRating()?.toFixed(1)" :aria-label="`Rating of this product is ${getRating()?.toFixed(1)} out of 5.`"></div>
+            </div>
+
             <div v-for="r, index in state.reviews.reviews" class="my-4 has-text-left">
                 <div class="panel" v-show="(index < 20) || state.reviewsExpanded">
                     <div class="panel-heading">{{ r.summary }}</div>
-                    <div class="panel-block"  style="overflow-y: hidden;">
+                    <div class="panel-block" style="overflow-y: hidden;">
                         <div>
                             <p class="">👤 <b>{{ r.user_display }}</b></p>
                             <p class="has-text-grey">version: {{ r.version }}</p>
@@ -86,7 +92,7 @@
                 </div>
                 <!-- <p class="is-2" style="text-align: left;">{{ r.summary }}</p> -->
             </div>
-            
+
             <div v-if="state.reviews.reviews.length > 20">
                 <button class="button btn" @click="state.reviewsExpanded = true">Show all</button>
             </div>
@@ -165,6 +171,30 @@
     </Base>
 </template>
 
+<style>
+:root {
+    --star-color: #fff;
+    --star-background: #fc0;
+}
+
+.stars {
+    --percent: calc(var(--rating) / 5 * 100%);
+
+    display: inline-block;
+    font-size: 20px;
+    font-family: Times;
+    line-height: 1;
+}
+
+.stars::before {
+    content: '★★★★★';
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--star-background) var(--percent), var(--star-color) var(--percent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+</style>
+
 <script setup lang="ts">
 import Base from '../views/Base.vue'
 import { ref, onMounted, reactive, watch, Ref, VueElement } from "vue";
@@ -186,7 +216,6 @@ import LazyImage from '../components/LazyImage.vue';
 interface GraphData { labels: string[], datasets: { name: string; values: number[]; type: string }[], yMarkers?: any[] }
 interface ChartMarker { label: string; value: number; options: Object }
 
-const router = useRouter()
 const route = useRoute()
 
 const state: UnwrapNestedRefs<{
@@ -319,9 +348,6 @@ function loadGraphData(data: AppDetailElement) {
             end: new Date(dayjs(data.history[data.history.length - 1].date, 'YYYY/MM/DD').valueOf())
         },
     })
-
-    console.log(updatedHeatmap);
-
 }
 
 function reloadGraphData(dates: Date[]) {
@@ -357,6 +383,18 @@ function copyAppNameToClipBoard(iconTarget: string) {
     if (state.appDetails?.name) {
         copyToClipboard(getShieldIoBadgeDataUrl(state.appDetails.name), iconTarget)
     }
+}
+
+function getRating() {
+    if (!state?.reviews?.ratings || (state.reviews.ratings.star0 === undefined) || (state.reviews.ratings.total === 0)) {
+        return null;
+    }
+
+    let rating = ['star0', 'star1', 'star2', 'star3', 'star4', 'star5'].reduce((acc, curr, i) => {
+        return acc + (state.reviews.ratings[curr] * i)
+    }, 0) / state.reviews.ratings.total;
+
+    return rating;
 }
 
 const appDataPromise: Ref<any> = ref(null)
