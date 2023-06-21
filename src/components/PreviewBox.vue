@@ -8,7 +8,10 @@
             <div class="media-content">
                 <div class="content">
                     <p>
-                        <router-link :to="`/app/${encodeURIComponent(data.name)}`">
+                        <div v-if="hideLink === true">
+                            <strong class="is-size-5">{{ data.appstream.name && data.appstream.name.length ? data.appstream.name : data.name }}</strong>
+                        </div>
+                        <router-link v-else :to="`/app/${encodeURIComponent(data.name)}`">
                             <strong class="is-size-5">{{ data.appstream.name && data.appstream.name.length ? data.appstream.name : data.name }}</strong>
                         </router-link>
                         <p class="is-size-7">{{data.name}}</p>
@@ -33,6 +36,7 @@ import LazyImage from './LazyImage.vue';
 const props = defineProps<{
     data: SummaryElement;
     hideIcon?: boolean;
+    hideLink?: boolean;
     label: string;
 }>()
 

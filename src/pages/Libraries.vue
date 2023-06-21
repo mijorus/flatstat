@@ -10,7 +10,7 @@
         <div v-if="partialList">
             <div class="columns is-multiline">
                 <div v-for="app in partialList" class="column is-half">
-                    <PreviewBox label="" :data="app" :hide-icon="true"/>
+                    <PreviewBox :hide-link="true" label="" :data="app" :hide-icon="true"/>
                 </div>
             </div>
         </div>
