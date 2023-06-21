@@ -49,61 +49,36 @@
             </div>
 
             <div class="container is-max-desktop">
-                <div class="is-size-6 content mb-6" style="text-align: left;">
-                    <p v-html="state.appDetails?.appstream.description.replaceAll('script>', '')">
+                <div class="is-size-6 mb-6" style="text-align: left;">
+                    <p class="content mx-5" v-html="state.appDetails?.appstream.description.replaceAll('script>', '')">
                     </p>
                 </div>
             </div>
 
+            <div v-if="state.appDetails" class="mb-6">
+                <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
+                <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
+            </div>
+            <hr>
 
-            <h3 class="is-size-4">Updates heatmap (last 12 months)</h3>
-            <p class="has-text-grey is-size-6">Number of updates per day</p>
-            <div class="columns">
-                <div class="column is-flex" style="overflow-x: auto; justify-content: center;">
-                    <div id="updates-heatmap"> </div>
+            <div class="mb-6">
+                <h3 class="is-size-4">Updates heatmap (last 12 months)</h3>
+                <p class="has-text-grey is-size-6">Number of updates per day</p>
+                <div class="columns">
+                    <div class="column is-flex" style="overflow-x: auto; justify-content: center;">
+                        <div id="updates-heatmap"> </div>
+                    </div>
                 </div>
             </div>
+            <hr>
         </div>
     </div>
 
-    <div class="columns">
-        <div v-if="!state.isLib && state.reviews" class="column is-half">
-            <h2 class="is-size-4 mt-6">Reviews</h2>
-            <p class="has-text-grey">User reviews and ratings from <a href="https://odrs.gnome.org/">GNOME's ODRS project</a></p>
-
-            <div v-if="state.reviews.ratings && (getRating() !== null)">
-
-                {{ getRating()?.toFixed(1) }}<div class="stars" :style="'--rating:' + getRating()?.toFixed(1)" :aria-label="`Rating of this product is ${getRating()?.toFixed(1)} out of 5.`"></div>
-            </div>
-
-            <div v-for="r, index in state.reviews.reviews" class="my-4 has-text-left">
-                <div class="panel" v-show="(index < 20) || state.reviewsExpanded">
-                    <div class="panel-heading">{{ r.summary }}</div>
-                    <div class="panel-block" style="overflow-y: hidden;">
-                        <div>
-                            <p class="">👤 <b>{{ r.user_display }}</b></p>
-                            <p class="has-text-grey">version: {{ r.version }}</p>
-                            <div class="mb-3"></div>
-                            <p style="white-space: normal;">
-                                {{ r.description }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <!-- <p class="is-2" style="text-align: left;">{{ r.summary }}</p> -->
-            </div>
-
-            <div v-if="state.reviews.reviews.length > 20">
-                <button class="button btn" @click="state.reviewsExpanded = true">Show all</button>
-            </div>
-        </div>
-        <div v-if="state.appDetails" class="mt-6 column">
-
-            <div class="p-3 has-background-light" style="border-radius: 10px;">
-                <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
-                <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
-                <div v-if="!state.isLib">
-                    <h2 class="is-size-4 mt-6">Badges</h2>
+    <div>
+        <div v-if="state.appDetails" class="mb-6">
+            <div style="border-radius: 10px;">
+                <div v-if="!state.isLib" class="mb-6">
+                    <h2 class="is-size-4">Badges</h2>
                     <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
                     <p class="is-size-7 has-text-grey">(ps more coming soon 🤫)</p>
                     <div class="mt-4 columns">
@@ -148,9 +123,10 @@
                         </div>
                     </div>
                 </div>
+                <hr>
                 <div class="releases-box" v-if="state?.appDetails?.appstream?.releases">
-                    <h2 class="is-size-4 mt-6">Lastest updates</h2>
-                    <div class="columns is-centered has-text-left is-mobile" v-for="release of state.appDetails.appstream.releases.slice(0, 7)">
+                    <h2 class="is-size-4 mt-6">Latest updates</h2>
+                    <div class="columns is-centered has-text-left is-mobile" v-for="release of state.appDetails.appstream.releases.slice(0, 5)">
                         <div class="column is-one-third mt-2" style="border-left: 1px solid lightgrey;">
                             <p>
                                 Version: {{ release.version }}
@@ -165,6 +141,39 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <hr>
+
+        <div v-if="!state.isLib && state.reviews">
+            <h2 class="is-size-4 mt-6">Reviews</h2>
+            <p class="has-text-grey">User reviews and ratings from <a href="https://odrs.gnome.org/">GNOME's ODRS project</a></p>
+
+            <div v-if="state.reviews.ratings && (getRating() !== null)">
+
+                {{ getRating()?.toFixed(1) }}<div class="stars" :style="'--rating:' + getRating()?.toFixed(1)" :aria-label="`Rating of this product is ${getRating()?.toFixed(1)} out of 5.`"></div>
+            </div>
+
+            <div class="columns is-multiline mx-3">
+                <div v-for="r, index in state.reviews.reviews" class="has-text-left column is-6" v-show="(index < 20) || state.reviewsExpanded">
+                    <div class="panel">
+                        <div class="panel-heading">{{ r.summary }}</div>
+                        <div class="panel-block" style="overflow-y: hidden;">
+                            <div>
+                                <p class="">👤 <b>{{ r.user_display }}</b></p>
+                                <p class="has-text-grey">version: {{ r.version }}</p>
+                                <div class="mb-3"></div>
+                                <p style="white-space: normal;">
+                                    {{ r.description }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="state.reviews.reviews.length > 20">
+                <button class="button btn" @click="state.reviewsExpanded = true">Show all</button>
             </div>
         </div>
     </div>
@@ -268,7 +277,7 @@ function loadGraphData(data: AppDetailElement) {
         const currentDate: dayjs.Dayjs = dayjs(h.date, 'YYYY/MM/DD');
 
         if ((last > 0) && (currentDate.isBefore(dayjs().subtract(2, 'days')))) {
-            if (currentDate.isBefore(from)) continue
+            if (currentDate.isBefore(from.subtract(1, 'day'))) continue
             else if (currentDate.isAfter(to)) break
 
             graphData.labels.push(h.date)
