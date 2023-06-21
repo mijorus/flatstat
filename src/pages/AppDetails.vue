@@ -55,13 +55,13 @@
                 </div>
             </div>
 
-            <div v-if="state.appDetails" class="mb-6">
+            <div v-if="state.appDetails" >
                 <p class="is-size-3">Total downloads: {{ state.appDetails.history_sum.i.toLocaleString() }}</p>
                 <p class="is-size-6 has-text-grey">Updated: {{ state.appDetails.history_sum.u.toLocaleString() }} times</p>
             </div>
             <hr>
 
-            <div class="mb-6">
+            <div>
                 <h3 class="is-size-4">Updates heatmap (last 12 months)</h3>
                 <p class="has-text-grey is-size-6">Number of updates per day</p>
                 <div class="columns">
@@ -77,7 +77,7 @@
     <div>
         <div v-if="state.appDetails" class="mb-6">
             <div style="border-radius: 10px;">
-                <div v-if="!state.isLib" class="mb-6">
+                <div v-if="!state.isLib">
                     <h2 class="is-size-4">Badges</h2>
                     <p class="has-text-grey">Get some fancy badges for your new app 🚀</p>
                     <p class="is-size-7 has-text-grey">(ps more coming soon 🤫)</p>
